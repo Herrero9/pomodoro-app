@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
-import { PomodoroSettings } from '../models/pomodoro.model';
+import { extractYouTubeId, PomodoroSettings } from '../models/pomodoro.model';
 
 @Component({
   selector: 'app-settings',
@@ -23,11 +23,14 @@ export class SettingsPage implements OnInit {
   }
 
   async save(): Promise<void> {
+    const soundVideoId =
+      extractYouTubeId(this.form.soundVideoId) ?? this.timer.settings().soundVideoId;
     await this.timer.updateSettings({
       workMinutes: this.clamp(this.form.workMinutes),
       shortBreakMinutes: this.clamp(this.form.shortBreakMinutes),
       longBreakMinutes: this.clamp(this.form.longBreakMinutes),
       sessionsBeforeLongBreak: this.clamp(this.form.sessionsBeforeLongBreak),
+      soundVideoId,
     });
     this.router.navigateByUrl('/home');
   }

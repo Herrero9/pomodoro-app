@@ -42,7 +42,7 @@ export class TimerService {
       this.storage.get<PomodoroSettings>(SETTINGS_KEY),
       this.storage.get<CompletedPeriod[]>(HISTORY_KEY),
     ]);
-    const resolved = settings ?? DEFAULT_SETTINGS;
+    const resolved = { ...DEFAULT_SETTINGS, ...settings };
     this.settings.set(resolved);
     this.secondsRemaining.set(this.durationFor(this.phase(), resolved));
     if (history) {
@@ -79,28 +79,35 @@ export class TimerService {
     this.secondsRemaining.set(this.phaseDurationSeconds());
   }
 
+  /** Jumps to the next phase immediately, without crediting the skipped time as completed. */
+  skip(): void {
+    this.advancePhase(false);
+  }
+
   private tick(): void {
     const remaining = this.secondsRemaining() - 1;
     if (remaining <= 0) {
       this.secondsRemaining.set(0);
-      this.completePhase();
+      this.advancePhase(true);
     } else {
       this.secondsRemaining.set(remaining);
     }
   }
 
-  private completePhase(): void {
+  private advancePhase(recordHistory: boolean): void {
     const finishedPhase = this.phase();
     const settings = this.settings();
 
-    const period: CompletedPeriod = {
-      phase: finishedPhase,
-      durationMinutes: this.durationFor(finishedPhase, settings) / 60,
-      completedAt: new Date().toISOString(),
-    };
-    const history = [period, ...this.completedPeriods()];
-    this.completedPeriods.set(history);
-    this.storage.set(HISTORY_KEY, history);
+    if (recordHistory) {
+      const period: CompletedPeriod = {
+        phase: finishedPhase,
+        durationMinutes: this.durationFor(finishedPhase, settings) / 60,
+        completedAt: new Date().toISOString(),
+      };
+      const history = [period, ...this.completedPeriods()];
+      this.completedPeriods.set(history);
+      this.storage.set(HISTORY_KEY, history);
+    }
 
     let nextWorkCount = this.workPeriodsCompleted();
     let nextPhase: PomodoroPhase;

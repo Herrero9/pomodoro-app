@@ -58,6 +58,20 @@
       </ion-item>
     </ion-list>
 
+    <div class="eyebrow section-label">Sonido de fondo</div>
+
+    <ion-list>
+      <ion-item lines="none">
+        <ion-input
+          label="Vídeo de YouTube"
+          labelPlacement="stacked"
+          placeholder="Pega la URL o el ID del vídeo"
+          [(ngModel)]="form.soundVideoId"
+          name="soundVideoId"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+
     <ion-button expand="block" type="submit" class="save-btn">Guardar</ion-button>
   </form>
 
