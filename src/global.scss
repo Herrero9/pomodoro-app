@@ -1,0 +1,120 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* Dark mode is driven manually via body.dark (see theme/variables.scss and
+   ThemeService) instead of Ionic's system/class palette files, so it stays
+   in sync with the in-app toggle rather than the OS preference. angular.json
+   already includes theme/variables.scss as a sibling global style. */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hr {
+  height: 2px;
+  border: 0;
+  margin: 0;
+  background: var(--color-divider);
+}
+
+ion-content {
+  --background: var(--color-bg);
+  --color: var(--color-text);
+}
+
+ion-header ion-toolbar:first-of-type {
+  --border-width: 0;
+  --box-shadow: none;
+}
+
+ion-toolbar {
+  --background: var(--color-bg);
+  --color: var(--color-text);
+}
+
+ion-button {
+  --border-radius: var(--radius);
+  --box-shadow: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-size: 14px;
+}
+
+ion-item {
+  --background: var(--color-bg);
+  --border-color: var(--color-divider);
+  --color: var(--color-text);
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+ion-list {
+  background: transparent;
+}
+
+ion-list-header {
+  --color: var(--color-text);
+}
+
+ion-input {
+  --background: var(--color-surface);
+  --color: var(--color-text);
+  --padding-start: 10px !important;
+  --padding-end: 10px !important;
+}
+
+ion-toggle {
+  --track-background-checked: var(--color-accent);
+}

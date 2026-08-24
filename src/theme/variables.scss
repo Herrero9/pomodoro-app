@@ -1,0 +1,79 @@
+// Design tokens adapted from the "Interval" Claude Design canvas —
+// flat modernist system: sharp corners, hairline rules, Archivo type.
+
+:root {
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #ec3013;
+  --color-accent-2: #e15b47;
+  --color-divider: rgba(32, 30, 29, 0.4);
+
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+
+  --color-accent-100: #fff2ef;
+  --color-accent-800: #7c1405;
+
+  --font-heading: 'Archivo', system-ui, sans-serif;
+  --font-body: 'Archivo', system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius: 0px;
+
+  // Ionic core variables — keep native components (ion-header, ion-item…)
+  // in sync with the design tokens above instead of Ionic's default palette.
+  --ion-background-color: var(--color-bg);
+  --ion-text-color: var(--color-text);
+  --ion-toolbar-background: var(--color-bg);
+  --ion-toolbar-color: var(--color-text);
+  --ion-item-background: var(--color-bg);
+  --ion-border-color: var(--color-divider);
+  --ion-font-family: var(--font-body);
+
+  --ion-color-primary: #ec3013;
+  --ion-color-primary-rgb: 236, 48, 19;
+  --ion-color-primary-contrast: #f3f2f2;
+  --ion-color-primary-contrast-rgb: 243, 242, 242;
+  --ion-color-primary-shade: #ae1800;
+  --ion-color-primary-tint: #ff563c;
+}
+
+body.dark {
+  --color-bg: #1a1918;
+  --color-surface: #242322;
+  --color-text: #f3f2f2;
+  --color-accent: #ff563c;
+  --color-accent-2: #ff9783;
+  --color-divider: rgba(243, 242, 242, 0.4);
+
+  --color-neutral-300: rgba(243, 242, 242, 0.16);
+  --color-neutral-400: rgba(243, 242, 242, 0.35);
+  --color-neutral-500: rgba(243, 242, 242, 0.5);
+
+  --ion-color-primary: #ff563c;
+  --ion-color-primary-rgb: 255, 86, 60;
+  --ion-color-primary-contrast: #1a1918;
+  --ion-color-primary-contrast-rgb: 26, 25, 24;
+  --ion-color-primary-shade: #dd2b0f;
+  --ion-color-primary-tint: #ff9783;
+
+  // Custom properties don't re-resolve their var() references per descendant —
+  // a var(--color-bg) captured once on :root stays light forever. Redeclare
+  // the ion-* mappings here so they pick up this scope's dark tokens instead.
+  --ion-background-color: var(--color-bg);
+  --ion-text-color: var(--color-text);
+  --ion-toolbar-background: var(--color-bg);
+  --ion-toolbar-color: var(--color-text);
+  --ion-item-background: var(--color-bg);
+  --ion-border-color: var(--color-divider);
+
+  color-scheme: dark;
+}

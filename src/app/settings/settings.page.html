@@ -1,0 +1,77 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <span class="eyebrow">Ajustes</span>
+  </ion-toolbar>
+  <hr class="hr" />
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <form (ngSubmit)="save()">
+    <div class="eyebrow section-label">Duraciones</div>
+
+    <ion-list>
+      <ion-item>
+        <ion-input
+          label="Duración del trabajo (min)"
+          labelPlacement="stacked"
+          type="number"
+          min="1"
+          [(ngModel)]="form.workMinutes"
+          name="workMinutes"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input
+          label="Descanso corto (min)"
+          labelPlacement="stacked"
+          type="number"
+          min="1"
+          [(ngModel)]="form.shortBreakMinutes"
+          name="shortBreakMinutes"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input
+          label="Descanso largo (min)"
+          labelPlacement="stacked"
+          type="number"
+          min="1"
+          [(ngModel)]="form.longBreakMinutes"
+          name="longBreakMinutes"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input
+          label="Periodos de trabajo antes del descanso largo"
+          labelPlacement="stacked"
+          type="number"
+          min="1"
+          [(ngModel)]="form.sessionsBeforeLongBreak"
+          name="sessionsBeforeLongBreak"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" type="submit" class="save-btn">Guardar</ion-button>
+  </form>
+
+  <hr class="hr" />
+
+  <div class="eyebrow section-label">Apariencia</div>
+
+  <div class="toggle-row" (click)="toggleDark()">
+    <div class="toggle-copy">
+      <div class="toggle-title">Tema oscuro</div>
+      <div class="toggle-hint">Invierte los colores para usarlo por la noche</div>
+    </div>
+    <div class="switch" [class.on]="theme.isDark()">
+      <div class="knob"></div>
+    </div>
+  </div>
+</ion-content>

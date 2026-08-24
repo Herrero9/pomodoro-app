@@ -1,0 +1,152 @@
+ion-toolbar {
+  .eyebrow {
+    font-weight: 800;
+  }
+
+  .cycle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    margin-right: var(--space-2);
+  }
+
+  .run-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-neutral-400);
+
+    &.running {
+      background: var(--color-accent);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.timer-wrap {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) 0 var(--space-6);
+}
+
+.phase-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.headline {
+  margin: 5px 0 0;
+  font-size: 25px;
+  line-height: 1.1;
+}
+
+.ring-wrap {
+  position: relative;
+  width: 268px;
+  height: 268px;
+  margin: var(--space-6) auto 0;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.ring-bg {
+  fill: none;
+  stroke: var(--color-neutral-300);
+  stroke-width: 13;
+}
+
+.ring-progress {
+  fill: none;
+  stroke-width: 13;
+  stroke-linecap: butt;
+  transition: stroke-dashoffset 1s linear;
+  stroke: var(--color-accent);
+}
+
+.time-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.time {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.time-meta {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+.dots-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-6);
+}
+
+.dot {
+  flex: 1;
+  height: 6px;
+  background: var(--color-neutral-300);
+
+  &.filled {
+    background: var(--color-accent);
+  }
+}
+
+.dots-count {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  padding-left: var(--space-2);
+  white-space: nowrap;
+}
+
+.divider-tight {
+  margin: var(--space-4) 0 0;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-top: var(--space-4);
+
+  ion-button {
+    margin: 0;
+    height: 52px;
+    --padding-start: 18px;
+    --padding-end: 18px;
+  }
+}
+
+.btn-run {
+  flex: 1;
+
+  &::part(native) {
+    justify-content: flex-start;
+  }
+}
+
+.btn-reset {
+  --border-color: var(--color-divider);
+  --color: var(--color-text);
+}
