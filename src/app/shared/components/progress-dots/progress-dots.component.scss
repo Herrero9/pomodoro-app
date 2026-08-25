@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--dot-size); // square rhythm: gap matches the dot height
+}
+
+.dot {
+  flex: 1;
+  height: var(--dot-size);
+  background: var(--color-neutral-300);
+
+  &.filled {
+    background: var(--color-accent);
+  }
+}

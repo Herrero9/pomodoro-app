@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ThemeService } from './services/theme.service';
 
 @Component({
@@ -8,5 +8,7 @@ import { ThemeService } from './services/theme.service';
   standalone: false,
 })
 export class AppComponent {
-  constructor(private theme: ThemeService) {}
+  // Injected for its side effect: creating the service applies the stored
+  // theme to <body> before the first page renders.
+  private readonly theme = inject(ThemeService);
 }

@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.timer-wrap {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) 0 var(--space-6);
+}
+
+.phase-label {
+  font-size: var(--font-size-key);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-accent);
+}
+
+.headline {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-lg);
+  line-height: 1.1;
+}
+
+.time {
+  font-size: 56px;
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.time-meta {
+  color: var(--color-text-subtle);
+}
+
+app-progress-dots {
+  margin-top: var(--space-6);
+}
+
+.dots-count {
+  color: var(--color-text-subtle);
+  padding-left: var(--space-2);
+  white-space: nowrap;
+}

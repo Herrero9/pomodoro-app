@@ -3,18 +3,17 @@ import { IonicModule } from '@ionic/angular/lazy';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
-import { HomeHeaderComponent } from './components/home-header/home-header.component';
-import { PanelMainComponent } from './components/panel-main/panel-main.component';
-import { PanelSideComponent } from './components/panel-side/panel-side.component';
+import { HomePageModule } from './home.module';
 
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
 
   beforeEach(async () => {
+    // Importing the real feature module keeps the test in step with whatever
+    // components the page is composed of.
     await TestBed.configureTestingModule({
-      declarations: [HomePage, HomeHeaderComponent, PanelMainComponent, PanelSideComponent],
-      imports: [IonicModule.forRoot(), RouterModule.forRoot([])]
+      imports: [IonicModule.forRoot(), RouterModule.forRoot([]), HomePageModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomePage);

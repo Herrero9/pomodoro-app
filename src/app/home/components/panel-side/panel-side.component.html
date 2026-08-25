@@ -12,7 +12,7 @@
     <div class="sound-frame">
       <iframe
         [src]="soundUrl()"
-        title="Lo-fi para concentrarse"
+        title="Sonido de fondo para concentrarse"
         allow="autoplay; encrypted-media; picture-in-picture"
         allowfullscreen
       ></iframe>
@@ -27,7 +27,7 @@
           type="button"
           class="preset-card"
           [class.active]="activePresetName() === preset.name"
-          (click)="applyPreset(preset)"
+          (click)="timer.applyPreset(preset)"
         >
           <span class="preset-name-row">
             <span class="preset-key">{{ preset.key }}</span>{{ preset.name }}
@@ -39,11 +39,9 @@
   </div>
 
   <div class="side-block side-cycle">
-    <div class="dots-row">
-      @for (dot of progressDots; track $index) {
-        <div class="dot" [class.filled]="dot"></div>
-      }
+    <app-progress-dots></app-progress-dots>
+    <div class="eyebrow cycle-footer">
+      Ciclo {{ timer.currentCycle() }} · {{ timer.nextPhaseLabel() }}
     </div>
-    <div class="eyebrow cycle-footer">Ciclo {{ currentWorkPeriod }} · {{ nextLabel }}</div>
   </div>
 </aside>

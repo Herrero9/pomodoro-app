@@ -1,0 +1,16 @@
+<div class="ring-wrap" [class.ring-wrap--panel]="variant() === 'panel'">
+  <svg viewBox="0 0 200 200" class="ring" aria-hidden="true">
+    <circle class="ring-bg" cx="100" cy="100" [attr.r]="radius" />
+    <circle
+      class="ring-progress"
+      cx="100"
+      cy="100"
+      [attr.r]="radius"
+      [attr.stroke-dasharray]="circumference"
+      [attr.stroke-dashoffset]="dashOffset()"
+    />
+  </svg>
+  <div class="ring-center">
+    <ng-content></ng-content>
+  </div>
+</div>

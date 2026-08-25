@@ -1,13 +1,14 @@
+// `display: contents` lets .panel-side be the flex item of the page layout.
 :host {
   display: contents;
 }
 
 .panel-side {
   flex: 3 1 0;
-  min-width: 21rem;
+  min-width: var(--sidebar-min-width);
   display: flex;
   flex-direction: column;
-  border-left: 2px solid var(--color-divider);
+  border-left: var(--rule-thick) solid var(--color-divider);
   background: var(--color-surface);
 }
 
@@ -16,14 +17,15 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-4);
-  border-bottom: 2px solid var(--color-divider);
+  border-bottom: var(--rule-thick) solid var(--color-divider);
 }
 
 .side-block {
   padding: var(--space-4);
-  border-bottom: 1px solid var(--color-divider);
+  border-bottom: var(--rule-hairline) solid var(--color-divider);
 }
 
+// Absorbs the leftover height so the video grows with the window.
 .side-sound {
   flex: 1;
   min-height: 0;
@@ -47,7 +49,7 @@
   flex: 1;
   min-height: 120px;
   background: var(--color-neutral-300);
-  border: 1px solid var(--color-divider);
+  border: var(--rule-hairline) solid var(--color-divider);
 
   iframe {
     position: absolute;
@@ -70,7 +72,7 @@
   flex-direction: column;
   gap: 2px;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-divider);
+  border: var(--rule-hairline) solid var(--color-divider);
   background: transparent;
   color: var(--color-text);
   font-family: var(--font-body);
@@ -88,8 +90,8 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: var(--font-size-sm);
+  font-weight: var(--weight-bold);
 }
 
 .preset-key {
@@ -98,17 +100,22 @@
 }
 
 .preset-spec {
-  font-size: 11px;
+  font-size: var(--font-size-eyebrow);
   opacity: 0.7;
 }
 
+// Pinned to the bottom of the sidebar.
 .side-cycle {
   border-bottom: none;
   margin-top: auto;
-  border-top: 2px solid var(--color-divider);
+  border-top: var(--rule-thick) solid var(--color-divider);
+
+  app-progress-dots {
+    margin-top: var(--space-6);
+  }
 }
 
 .cycle-footer {
   margin-top: var(--space-2);
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: var(--color-text-muted);
 }

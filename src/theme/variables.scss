@@ -1,8 +1,15 @@
 // Design tokens adapted from the "Interval" Claude Design canvas —
 // flat modernist system: sharp corners, hairline rules, Archivo type,
 // warm cream/terracotta palette (design 1b).
+//
+// Everything a component might hard-code (colors, spacing, type sizes, rule
+// widths, control heights, ring geometry) is declared here so a component
+// stylesheet only ever references `var(--…)`. Breakpoints live in
+// `_breakpoints.scss` instead, since media queries cannot read custom
+// properties.
 
 :root {
+  // ── Palette ──────────────────────────────────────────────────────
   --color-bg: #f0e9df;
   --color-surface: #f8f3ea;
   --color-text: #2b2320;
@@ -17,9 +24,33 @@
   --color-accent-100: #f7ece4;
   --color-accent-800: #6d3620;
 
+  // Text tints used for secondary copy. Derived from --color-text so they
+  // follow the palette automatically in both themes.
+  --color-text-muted: color-mix(in srgb, var(--color-text) 55%, transparent);
+  --color-text-subtle: color-mix(in srgb, var(--color-text) 50%, transparent);
+
+  // Same idea for copy laid over the accent-filled break overlay, where the
+  // foreground is --color-bg instead of --color-text.
+  --color-on-accent-muted: color-mix(in srgb, var(--color-bg) 75%, transparent);
+  --color-on-accent-rule: color-mix(in srgb, var(--color-bg) 50%, transparent);
+  --color-on-accent-border: color-mix(in srgb, var(--color-bg) 60%, transparent);
+
+  // ── Typography ───────────────────────────────────────────────────
   --font-heading: 'Archivo', system-ui, sans-serif;
   --font-body: 'Archivo', system-ui, sans-serif;
 
+  --font-size-key: 10px; // keycaps, phase labels
+  --font-size-eyebrow: 11px; // uppercase micro-labels
+  --font-size-sm: 12px;
+  --font-size-control: 14px; // buttons
+  --font-size-md: 15px; // body copy
+  --font-size-lg: 25px; // mobile headline
+
+  --weight-bold: 800;
+  --tracking-eyebrow: 0.1em;
+  --tracking-wide: 0.12em;
+
+  // ── Spacing ──────────────────────────────────────────────────────
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -27,10 +58,28 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  --radius: 0px;
+  // ── Shape & structure ────────────────────────────────────────────
+  --radius: 0px; // the design is deliberately square-cornered
+  --rule-hairline: 1px; // divisions inside a panel
+  --rule-thick: 2px; // divisions between panels / major sections
 
-  // Ionic core variables — keep native components (ion-header, ion-item…)
-  // in sync with the design tokens above instead of Ionic's default palette.
+  --control-height: 52px; // primary buttons row
+  --control-padding-x: 18px;
+  --gap-controls: 10px;
+
+  --dot-size: 6px; // cycle-progress dots and the running indicator
+  --sidebar-min-width: 21rem;
+
+  // ── Countdown ring ───────────────────────────────────────────────
+  // The SVG viewBox is 200×200 with r=88, so the stroke width is in viewBox
+  // units while the two sizes below are the rendered box.
+  --ring-size: 268px; // compact (mobile) layout
+  --ring-size-panel: 210px; // desktop panel layout
+  --ring-stroke: 13;
+
+  // ── Ionic core variables ─────────────────────────────────────────
+  // Keep native components (ion-header, ion-item…) in sync with the design
+  // tokens above instead of Ionic's default palette.
   --ion-background-color: var(--color-bg);
   --ion-text-color: var(--color-text);
   --ion-toolbar-background: var(--color-bg);
@@ -68,7 +117,14 @@ body.dark {
 
   // Custom properties don't re-resolve their var() references per descendant —
   // a var(--color-bg) captured once on :root stays light forever. Redeclare
-  // the ion-* mappings here so they pick up this scope's dark tokens instead.
+  // every token built on top of another one here so it picks up this scope's
+  // dark values instead.
+  --color-text-muted: color-mix(in srgb, var(--color-text) 55%, transparent);
+  --color-text-subtle: color-mix(in srgb, var(--color-text) 50%, transparent);
+  --color-on-accent-muted: color-mix(in srgb, var(--color-bg) 75%, transparent);
+  --color-on-accent-rule: color-mix(in srgb, var(--color-bg) 50%, transparent);
+  --color-on-accent-border: color-mix(in srgb, var(--color-bg) 60%, transparent);
+
   --ion-background-color: var(--color-bg);
   --ion-text-color: var(--color-text);
   --ion-toolbar-background: var(--color-bg);

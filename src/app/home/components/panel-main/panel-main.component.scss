@@ -1,3 +1,4 @@
+// `display: contents` lets .panel-main be the flex item of the page layout.
 :host {
   display: contents;
 }
@@ -18,7 +19,7 @@
 }
 
 .mode-label {
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: var(--color-text-muted);
 }
 
 .panel-row {
@@ -28,48 +29,8 @@
   margin-top: var(--space-4);
 }
 
-.ring-wrap {
-  position: relative;
-  width: 268px;
-  height: 268px;
-  margin: var(--space-6) auto 0;
-}
-
-.ring {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-  overflow: visible;
-}
-
-.ring-bg {
-  fill: none;
-  stroke: var(--color-neutral-300);
-  stroke-width: 13;
-}
-
-.ring-progress {
-  fill: none;
-  stroke-width: 13;
-  stroke-linecap: butt;
-  transition: stroke-dashoffset 1s linear;
-  stroke: var(--color-accent);
-}
-
-.ring-wrap--desktop {
-  width: 210px;
-  height: 210px;
-  margin: 0;
-  flex: none;
-}
-
 .ring-pct {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: var(--color-text-muted);
 }
 
 .panel-time {
@@ -78,47 +39,17 @@
 
 .big-time {
   font-size: clamp(56px, 9vw, 132px);
-  font-weight: 800;
+  font-weight: var(--weight-bold);
   letter-spacing: -0.05em;
   line-height: 0.85;
 }
 
 .panel-headline {
   margin: var(--space-3) 0 0;
-  font-size: 15px;
+  font-size: var(--font-size-md);
   line-height: 1.5;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: var(--color-text-muted);
   max-width: 360px;
-}
-
-.divider-tight {
-  margin: var(--space-4) 0 0;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-top: var(--space-4);
-
-  ion-button {
-    margin: 0;
-    height: 52px;
-    --padding-start: 18px;
-    --padding-end: 18px;
-  }
-}
-
-.btn-run {
-  flex: 1;
-
-  &::part(native) {
-    justify-content: flex-start;
-  }
-}
-
-.btn-reset {
-  --border-color: var(--color-divider);
-  --color: var(--color-text);
 }
 
 .panel-shortcuts {
@@ -128,25 +59,26 @@
   gap: var(--space-4);
   height: 60px;
   flex: none;
-  border-top: 1px solid var(--color-divider);
+  border-top: var(--rule-hairline) solid var(--color-divider);
 }
 
 .shortcut {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: 11px;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  font-size: var(--font-size-eyebrow);
+  color: var(--color-text-muted);
 
+  // Keycap.
   .key {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 22px;
     padding: 3px 6px;
-    border: 1px solid var(--color-divider);
-    font-size: 10px;
-    font-weight: 800;
+    border: var(--rule-hairline) solid var(--color-divider);
+    font-size: var(--font-size-key);
+    font-weight: var(--weight-bold);
     letter-spacing: 0.06em;
     color: var(--color-text);
   }

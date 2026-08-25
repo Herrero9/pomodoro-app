@@ -1,0 +1,9 @@
+// Media-query breakpoints. These have to be Sass variables rather than CSS
+// custom properties: `@media (min-width: var(--x))` is not valid CSS.
+//
+// Usage:  @use '../../theme/breakpoints' as bp;
+//         @media (min-width: bp.$desktop) { … }
+
+/// Point at which the compact (single-column) layout is replaced by the
+/// two-panel desktop layout.
+$desktop: 900px;

@@ -1,0 +1,51 @@
+:host {
+  display: contents;
+}
+
+.ring-wrap {
+  position: relative;
+  width: var(--ring-size);
+  height: var(--ring-size);
+  margin: var(--space-6) auto 0;
+
+  // Desktop panel: smaller, and aligned to the row rather than centred.
+  &--panel {
+    width: var(--ring-size-panel);
+    height: var(--ring-size-panel);
+    margin: 0;
+    flex: none;
+  }
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); // start the arc at 12 o'clock
+  overflow: visible;
+}
+
+.ring-bg,
+.ring-progress {
+  fill: none;
+  stroke-width: var(--ring-stroke);
+}
+
+.ring-bg {
+  stroke: var(--color-neutral-300);
+}
+
+.ring-progress {
+  stroke: var(--color-accent);
+  stroke-linecap: butt;
+  transition: stroke-dashoffset 1s linear; // matches the 1s tick
+}
+
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}

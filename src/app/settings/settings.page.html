@@ -79,13 +79,15 @@
 
   <div class="eyebrow section-label">Apariencia</div>
 
-  <div class="toggle-row" (click)="toggleDark()">
-    <div class="toggle-copy">
-      <div class="toggle-title">Tema oscuro</div>
-      <div class="toggle-hint">Invierte los colores para usarlo por la noche</div>
-    </div>
-    <div class="switch" [class.on]="theme.isDark()">
-      <div class="knob"></div>
-    </div>
-  </div>
+  <!-- A real button so the row is reachable with the keyboard; the switch
+       below it is purely decorative. -->
+  <button type="button" class="toggle-row" [attr.aria-pressed]="theme.isDark()" (click)="toggleDark()">
+    <span class="toggle-copy">
+      <span class="toggle-title">Tema oscuro</span>
+      <span class="toggle-hint">Invierte los colores para usarlo por la noche</span>
+    </span>
+    <span class="switch" [class.on]="theme.isDark()" aria-hidden="true">
+      <span class="knob"></span>
+    </span>
+  </button>
 </ion-content>

@@ -1,4 +1,4 @@
-import { Injectable, effect, signal } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { StorageService } from './storage.service';
 
 const THEME_KEY = 'pomodoro_dark_mode';
@@ -6,10 +6,16 @@ const THEME_KEY = 'pomodoro_dark_mode';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   readonly isDark = signal<boolean>(false);
+
+  /** Resolves once the stored preference has been read back. */
   readonly ready: Promise<void>;
 
-  constructor(private storage: StorageService) {
+  private readonly storage = inject(StorageService);
+
+  constructor() {
     this.ready = this.restore();
+    // Single place where the preference reaches the DOM; every stylesheet
+    // hangs its dark palette off `body.dark`.
     effect(() => {
       document.body.classList.toggle('dark', this.isDark());
     });

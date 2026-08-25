@@ -1,5 +1,11 @@
+// Domain model for the pomodoro timer: state shape, persisted settings and
+// every piece of Spanish UI copy the app shows. Keeping the copy here (rather
+// than in templates) means a phrase is written once and reused by whichever
+// layout needs it.
+
 export type PomodoroPhase = 'work' | 'shortBreak' | 'longBreak';
 
+/** User-editable configuration, persisted between sessions. */
 export interface PomodoroSettings {
   workMinutes: number;
   shortBreakMinutes: number;
@@ -8,6 +14,7 @@ export interface PomodoroSettings {
   soundVideoId: string;
 }
 
+/** A work or break period the user actually ran to completion. */
 export interface CompletedPeriod {
   phase: PomodoroPhase;
   durationMinutes: number;
@@ -72,6 +79,30 @@ export const PHASE_LABELS: Record<PomodoroPhase, string> = {
   longBreak: 'Descanso largo',
 };
 
+/**
+ * Encouraging line shown next to the countdown. Derived purely from the timer
+ * state so both the compact and the desktop layout always say the same thing.
+ */
+export function headlineFor(phase: PomodoroPhase, isRunning: boolean, started: boolean): string {
+  if (phase !== 'work') {
+    return 'Respira. Ahora toca descansar.';
+  }
+  if (isRunning) {
+    return 'Estás en ello. Sigue así.';
+  }
+  return started ? 'En pausa. Retómalo cuando quieras.' : 'Listo cuando quieras.';
+}
+
+/** Keyboard shortcuts, listed in the desktop footer and handled by `HomePage`. */
+export const SHORTCUTS: { key: string; label: string }[] = [
+  { key: 'ESPACIO', label: 'Iniciar / pausar' },
+  { key: 'S', label: 'Saltar' },
+  { key: 'R', label: 'Reiniciar' },
+  { key: 'T', label: 'Tema' },
+  { key: '1–4', label: 'Preset' },
+];
+
+/** A selectable work/break duration pair. */
 export interface Preset {
   key: string;
   name: string;
@@ -80,6 +111,7 @@ export interface Preset {
   spec: string;
 }
 
+/** Work/break duration pairs offered as one-tap presets (keys 1-4). */
 export const PRESETS: Preset[] = [
   { key: '1', name: 'Clásico', workMinutes: 25, breakMinutes: 5, spec: '25 / 5' },
   { key: '2', name: 'Trabajo profundo', workMinutes: 50, breakMinutes: 10, spec: '50 / 10' },
@@ -87,11 +119,13 @@ export const PRESETS: Preset[] = [
   { key: '4', name: 'Bloque de estudio', workMinutes: 45, breakMinutes: 15, spec: '45 / 15' },
 ];
 
+/** One suggestion shown while a break is running. */
 export interface RestIdea {
   title: string;
   body: string;
 }
 
+/** Suggestions rotated through by the break overlay. */
 export const REST_IDEAS: RestIdea[] = [
   {
     title: 'Rellena el vaso.',

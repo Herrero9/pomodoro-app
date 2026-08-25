@@ -4,14 +4,14 @@
 
 ion-toolbar {
   .eyebrow {
-    font-weight: 800;
+    font-weight: var(--weight-bold);
   }
 
   .cycle-label {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    color: var(--color-text-muted);
     margin-right: var(--space-2);
   }
 }

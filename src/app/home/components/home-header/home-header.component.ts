@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TimerService } from '../../../services/timer.service';
 import { ThemeService } from '../../../services/theme.service';
 
+/** Toolbar shared by both home layouts: cycle counter, theme toggle, settings. */
 @Component({
   selector: 'app-home-header',
   templateUrl: './home-header.component.html',
@@ -9,13 +10,6 @@ import { ThemeService } from '../../../services/theme.service';
   standalone: false,
 })
 export class HomeHeaderComponent {
-  constructor(
-    public timer: TimerService,
-    public theme: ThemeService
-  ) {}
-
-  get currentWorkPeriod(): number {
-    const completed = this.timer.workPeriodsCompleted();
-    return this.timer.phase() === 'work' ? completed + 1 : completed;
-  }
+  readonly timer = inject(TimerService);
+  readonly theme = inject(ThemeService);
 }

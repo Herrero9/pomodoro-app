@@ -1,0 +1,28 @@
+<ion-button class="btn-run" (click)="timer.toggle()">
+  <ion-icon slot="start" [name]="timer.isRunning() ? 'pause' : 'play'"></ion-icon>
+  {{ timer.isRunning() ? 'Pausar' : 'Iniciar' }}
+</ion-button>
+
+<ion-button
+  class="btn-secondary"
+  fill="outline"
+  aria-label="Saltar al siguiente periodo"
+  (click)="timer.skip()"
+>
+  <ion-icon [slot]="showLabels() ? 'start' : 'icon-only'" name="play-skip-forward"></ion-icon>
+  @if (showLabels()) {
+    Saltar
+  }
+</ion-button>
+
+<ion-button
+  class="btn-secondary"
+  fill="outline"
+  aria-label="Reiniciar el periodo"
+  (click)="timer.reset()"
+>
+  <ion-icon [slot]="showLabels() ? 'start' : 'icon-only'" name="refresh"></ion-icon>
+  @if (showLabels()) {
+    Reiniciar
+  }
+</ion-button>

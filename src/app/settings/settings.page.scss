@@ -1,5 +1,5 @@
 ion-toolbar .eyebrow {
-  font-weight: 800;
+  font-weight: var(--weight-bold);
 }
 
 .section-label {
@@ -11,36 +11,47 @@ ion-toolbar .eyebrow {
   margin-top: var(--space-4);
 }
 
+// The whole row is a button; strip the native chrome and keep only the rule
+// underneath it.
 .toggle-row {
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  padding: 17px 0;
-  border-bottom: 1px solid var(--color-divider);
+  width: 100%;
+  padding: var(--space-4) 0;
+  border: 0;
+  border-bottom: var(--rule-hairline) solid var(--color-divider);
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-body);
+  text-align: left;
   cursor: pointer;
 }
 
 .toggle-copy {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .toggle-title {
-  font-size: 14px;
+  font-size: var(--font-size-control);
   font-weight: 600;
 }
 
 .toggle-hint {
-  font-size: 11.5px;
-  color: color-mix(in srgb, var(--color-text) 50%, transparent);
-  margin-top: 2px;
+  font-size: var(--font-size-eyebrow);
+  color: var(--color-text-subtle);
 }
 
+// Square switch: the knob is pushed to one end with justify-content.
 .switch {
   width: 44px;
   height: 24px;
   flex: none;
   background: transparent;
-  border: 2px solid var(--color-divider);
+  border: var(--rule-thick) solid var(--color-divider);
   display: flex;
   justify-content: flex-start;
   padding: 2px;

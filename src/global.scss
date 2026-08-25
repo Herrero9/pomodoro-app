@@ -1,12 +1,12 @@
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Three things only:
+ *   1. Ionic's own base stylesheets.
+ *   2. A handful of utility classes reused across pages (.eyebrow, .hr...).
+ *   3. Ionic component defaults remapped onto the design tokens.
+ * Anything specific to one screen belongs in that component's stylesheet, and
+ * every value below should come from a token in theme/variables.scss.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -28,14 +28,11 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
+ * Dark mode is driven manually via body.dark (see theme/variables.scss and
+ * ThemeService) instead of Ionic's system/class palette files, so it stays
+ * in sync with the in-app toggle rather than the OS preference. angular.json
+ * already includes theme/variables.scss as a sibling global style.
  */
-
-/* Dark mode is driven manually via body.dark (see theme/variables.scss and
-   ThemeService) instead of Ionic's system/class palette files, so it stays
-   in sync with the in-app toggle rather than the OS preference. angular.json
-   already includes theme/variables.scss as a sibling global style. */
 
 * {
   -webkit-tap-highlight-color: transparent;
@@ -47,30 +44,41 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 800;
+  font-weight: var(--weight-bold);
 }
 
+/* ── Utilities ─────────────────────────────────────────────────────────────
+   Small, single-purpose classes used by several components. */
+
+/** Keeps digits from shifting width as a countdown ticks. */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
+/** Uppercase micro-label used for section headings and metadata. */
 .eyebrow {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-size: var(--font-size-eyebrow);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 
+/** Full-width rule; `.divider-tight` sits closer to the block above it. */
 .hr {
-  height: 2px;
+  height: var(--rule-thick);
   border: 0;
   margin: 0;
   background: var(--color-divider);
+
+  &.divider-tight {
+    margin-top: var(--space-4);
+  }
 }
 
+/** Small dot that pulses while the timer is running. */
 .run-dot {
-  width: 6px;
-  height: 6px;
+  width: var(--dot-size);
+  height: var(--dot-size);
   border-radius: 50%;
   background: var(--color-neutral-400);
 
@@ -85,22 +93,8 @@ h1, h2, h3, h4, h5, h6 {
   50% { opacity: 0.3; }
 }
 
-.dots-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: var(--space-6);
-}
-
-.dot {
-  flex: 1;
-  height: 6px;
-  background: var(--color-neutral-300);
-
-  &.filled {
-    background: var(--color-accent);
-  }
-}
+/* ── Ionic component defaults ──────────────────────────────────────────────
+   Remapped onto the design tokens so components never restyle them locally. */
 
 ion-content {
   --background: var(--color-bg);
@@ -121,9 +115,9 @@ ion-button {
   --border-radius: var(--radius);
   --box-shadow: none;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: var(--weight-bold);
   letter-spacing: 0.02em;
-  font-size: 14px;
+  font-size: var(--font-size-control);
 }
 
 ion-item {

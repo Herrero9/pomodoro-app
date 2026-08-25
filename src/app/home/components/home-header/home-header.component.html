@@ -4,12 +4,18 @@
     <ion-buttons slot="end">
       <span class="eyebrow cycle-label">
         <span class="run-dot" [class.running]="timer.isRunning()"></span>
-        Ciclo {{ currentWorkPeriod }}/{{ timer.settings().sessionsBeforeLongBreak }}
+        Ciclo {{ timer.currentCycle() }}/{{ timer.settings().sessionsBeforeLongBreak }}
       </span>
-      <ion-button (click)="theme.setDark(!theme.isDark())">
-        <ion-icon slot="icon-only" [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      <ion-button
+        [attr.aria-label]="theme.isDark() ? 'Usar tema claro' : 'Usar tema oscuro'"
+        (click)="theme.setDark(!theme.isDark())"
+      >
+        <ion-icon
+          slot="icon-only"
+          [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"
+        ></ion-icon>
       </ion-button>
-      <ion-button routerLink="/settings">
+      <ion-button routerLink="/settings" aria-label="Ajustes">
         <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
       </ion-button>
     </ion-buttons>

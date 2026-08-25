@@ -1,0 +1,4 @@
+@for (isCompleted of timer.cycleDots(); track $index) {
+  <div class="dot" [class.filled]="isCompleted"></div>
+}
+<ng-content></ng-content>

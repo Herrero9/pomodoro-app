@@ -1,14 +1,9 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TimerService } from '../../../services/timer.service';
-import {
-  DEFAULT_SOUND_VIDEO_ID,
-  PHASE_LABELS,
-  PRESETS,
-  Preset,
-  extractYouTubeId,
-} from '../../../models/pomodoro.model';
+import { DEFAULT_SOUND_VIDEO_ID, PRESETS, extractYouTubeId } from '../../../models/pomodoro.model';
 
+/** Right-hand sidebar of the desktop layout: sound, presets and cycle progress. */
 @Component({
   selector: 'app-panel-side',
   templateUrl: './panel-side.component.html',
@@ -16,9 +11,17 @@ import {
   standalone: false,
 })
 export class PanelSideComponent {
-  readonly phaseLabels = PHASE_LABELS;
   readonly presets = PRESETS;
 
+  readonly timer = inject(TimerService);
+  private readonly sanitizer = inject(DomSanitizer);
+
+  /**
+   * Embed URL for the background-sound video, falling back to the default one
+   * when the stored setting is not a usable YouTube reference. Trusting the URL
+   * is safe because it is assembled here from an ID that `extractYouTubeId`
+   * already validated against a strict pattern.
+   */
   readonly soundUrl = computed<SafeResourceUrl>(() => {
     const id = extractYouTubeId(this.timer.settings().soundVideoId) ?? DEFAULT_SOUND_VIDEO_ID;
     return this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -26,6 +29,7 @@ export class PanelSideComponent {
     );
   });
 
+  /** Name of the preset matching the current durations, or null for a custom setup. */
   readonly activePresetName = computed(() => {
     const settings = this.timer.settings();
     const match = this.presets.find(
@@ -33,38 +37,4 @@ export class PanelSideComponent {
     );
     return match?.name ?? null;
   });
-
-  constructor(
-    public timer: TimerService,
-    private sanitizer: DomSanitizer
-  ) {}
-
-  get currentWorkPeriod(): number {
-    const completed = this.timer.workPeriodsCompleted();
-    return this.timer.phase() === 'work' ? completed + 1 : completed;
-  }
-
-  get nextLabel(): string {
-    if (this.timer.phase() !== 'work') {
-      return this.phaseLabels['work'];
-    }
-    const upcoming = this.timer.workPeriodsCompleted() + 1;
-    return upcoming >= this.timer.settings().sessionsBeforeLongBreak
-      ? this.phaseLabels['longBreak']
-      : this.phaseLabels['shortBreak'];
-  }
-
-  get progressDots(): boolean[] {
-    const total = this.timer.settings().sessionsBeforeLongBreak;
-    const completed = this.timer.workPeriodsCompleted();
-    return Array.from({ length: total }, (_, i) => i < completed);
-  }
-
-  applyPreset(preset: Preset): void {
-    this.timer.updateSettings({
-      ...this.timer.settings(),
-      workMinutes: preset.workMinutes,
-      shortBreakMinutes: preset.breakMinutes,
-    });
-  }
 }

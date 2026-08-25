@@ -1,119 +1,17 @@
-.timer-wrap {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-4) 0 var(--space-6);
-}
+@use '../../theme/breakpoints' as bp;
 
-.phase-label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.headline {
-  margin: 5px 0 0;
-  font-size: 25px;
-  line-height: 1.1;
-}
-
-.ring-wrap {
-  position: relative;
-  width: 268px;
-  height: 268px;
-  margin: var(--space-6) auto 0;
-}
-
-.ring {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-  overflow: visible;
-}
-
-.ring-bg {
-  fill: none;
-  stroke: var(--color-neutral-300);
-  stroke-width: 13;
-}
-
-.ring-progress {
-  fill: none;
-  stroke-width: 13;
-  stroke-linecap: butt;
-  transition: stroke-dashoffset 1s linear;
-  stroke: var(--color-accent);
-}
-
-.time-display {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.time {
-  font-size: 56px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-.time-meta {
-  color: color-mix(in srgb, var(--color-text) 50%, transparent);
-}
-
-.dots-count {
-  color: color-mix(in srgb, var(--color-text) 50%, transparent);
-  padding-left: var(--space-2);
-  white-space: nowrap;
-}
-
-.divider-tight {
-  margin: var(--space-4) 0 0;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-top: var(--space-4);
-
-  ion-button {
-    margin: 0;
-    height: 52px;
-    --padding-start: 18px;
-    --padding-end: 18px;
-  }
-}
-
-.btn-run {
-  flex: 1;
-
-  &::part(native) {
-    justify-content: flex-start;
-  }
-}
-
-.btn-reset {
-  --border-color: var(--color-divider);
-  --color: var(--color-text);
-}
-
-// ══════════════════════════════════════════════════════════════════
-// Desktop panel layout (design 1b) — ring + controls on the left,
-// background sound / presets / cycle progress in a fixed sidebar.
-// ══════════════════════════════════════════════════════════════════
+// Layout switch. Everything else lives in the panel components; this file only
+// decides which of them is on screen.
+//
+//  < bp.$desktop  -> app-panel-compact (single column)
+//  >= bp.$desktop -> app-panel-main + app-panel-side (two panels)
 
 .layout-desktop {
   display: none;
 }
 
-@media (min-width: 900px) {
-  .layout-mobile {
+@media (min-width: bp.$desktop) {
+  .layout-compact {
     display: none;
   }
 
@@ -121,98 +19,5 @@
     display: flex;
     align-items: stretch;
     min-height: 100%;
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════
-// Break overlay — takes over the whole window when a break starts,
-// on both the mobile and the desktop layout.
-// ══════════════════════════════════════════════════════════════════
-
-.break-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-6) var(--space-4);
-  background: var(--color-accent);
-  color: var(--color-bg);
-}
-
-.break-top {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-
-  .muted {
-    opacity: 0.75;
-  }
-}
-
-.break-divider {
-  height: 2px;
-  border: 0;
-  margin: var(--space-4) 0 0;
-  background: color-mix(in srgb, var(--color-bg) 50%, transparent);
-}
-
-.break-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 640px;
-}
-
-.break-mins {
-  opacity: 0.85;
-}
-
-.break-title {
-  margin: var(--space-3) 0 0;
-  font-size: clamp(36px, 8vw, 88px);
-  line-height: 1;
-  color: var(--color-bg);
-}
-
-.break-text {
-  margin: var(--space-4) 0 0;
-  font-size: 15px;
-  line-height: 1.6;
-  opacity: 0.9;
-}
-
-.break-actions {
-  display: flex;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-}
-
-.break-btn-primary {
-  --background: var(--color-bg);
-  --color: var(--color-accent);
-}
-
-.break-btn-secondary {
-  --border-color: color-mix(in srgb, var(--color-bg) 60%, transparent);
-  --color: var(--color-bg);
-}
-
-.break-foot {
-  flex: none;
-  color: color-mix(in srgb, var(--color-bg) 75%, transparent);
-}
-
-@media (min-width: 900px) {
-  .break-body {
-    max-width: 900px;
-  }
-
-  .break-text {
-    font-size: 17px;
-    max-width: 560px;
   }
 }

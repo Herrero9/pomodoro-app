@@ -1,0 +1,25 @@
+<div class="break-top">
+  <span>{{ timer.phaseLabel() }}</span>
+  <span class="muted">Ciclo {{ timer.currentCycle() }}</span>
+</div>
+
+<hr class="break-divider" />
+
+<div class="break-body">
+  <div class="break-countdown tabular-nums">
+    Volvemos en: {{ timer.secondsRemaining() | mmss }}
+  </div>
+  <h3 class="break-title">{{ restIdea().title }}</h3>
+  <p class="break-text">{{ restIdea().body }}</p>
+
+  <hr class="break-divider" />
+
+  <div class="break-actions">
+    <ion-button class="break-btn-primary" (click)="timer.skip()">Volver al foco</ion-button>
+    <ion-button class="break-btn-secondary" fill="outline" (click)="nextRestIdea()">
+      Otra idea
+    </ion-button>
+  </div>
+</div>
+
+<div class="eyebrow break-foot">El descanso ocupa toda la ventana</div>

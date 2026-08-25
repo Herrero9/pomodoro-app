@@ -1,0 +1,23 @@
+<ion-list>
+  <ion-list-header>
+    <span class="eyebrow">Periodos realizados</span>
+  </ion-list-header>
+
+  @for (period of timer.completedPeriods(); track period.completedAt) {
+    <ion-item lines="full">
+      <ion-icon
+        slot="start"
+        [name]="period.phase === 'work' ? 'briefcase-outline' : 'cafe-outline'"
+      ></ion-icon>
+      <ion-label>
+        <h2>{{ phaseLabels[period.phase] }}</h2>
+        <p>{{ period.durationMinutes }} min</p>
+      </ion-label>
+      <ion-note slot="end" class="tabular-nums">{{ period.completedAt | date: 'HH:mm' }}</ion-note>
+    </ion-item>
+  } @empty {
+    <ion-item lines="full">
+      <ion-label class="ion-text-center" color="medium">Aún no hay periodos completados</ion-label>
+    </ion-item>
+  }
+</ion-list>

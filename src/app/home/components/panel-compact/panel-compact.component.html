@@ -1,0 +1,23 @@
+<div class="timer-wrap">
+  <div class="eyebrow phase-label">{{ timer.phaseLabel() }}</div>
+  <h3 class="headline">{{ timer.headline() }}</h3>
+
+  <app-progress-ring [progress]="timer.progress()">
+    <div class="tabular-nums time">{{ timer.secondsRemaining() | mmss }}</div>
+    <div class="eyebrow time-meta">
+      {{ timer.phaseLabel() }} · {{ timer.progress() * 100 | number: '1.0-0' }}%
+    </div>
+  </app-progress-ring>
+
+  <app-progress-dots>
+    <span class="eyebrow dots-count">{{ timer.completedPeriods().length }} HOY</span>
+  </app-progress-dots>
+
+  <hr class="hr divider-tight" />
+
+  <app-timer-controls></app-timer-controls>
+</div>
+
+<hr class="hr" />
+
+<app-period-history></app-period-history>

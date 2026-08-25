@@ -1,0 +1,28 @@
+// The host is the button row itself. Both layouts place it right under the
+// tight divider, so the top margin lives here rather than at each call site.
+:host {
+  display: flex;
+  gap: var(--gap-controls);
+  margin-top: var(--space-4);
+}
+
+ion-button {
+  margin: 0;
+  height: var(--control-height);
+  --padding-start: var(--control-padding-x);
+  --padding-end: var(--control-padding-x);
+}
+
+// Takes whatever width the two secondary buttons leave.
+.btn-run {
+  flex: 1;
+
+  &::part(native) {
+    justify-content: flex-start;
+  }
+}
+
+.btn-secondary {
+  --border-color: var(--color-divider);
+  --color: var(--color-text);
+}
