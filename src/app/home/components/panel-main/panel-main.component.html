@@ -1,0 +1,53 @@
+<div class="panel-main">
+  <div class="panel-center">
+    <div class="eyebrow mode-label">{{ phaseLabels[timer.phase()] }} EN CURSO</div>
+
+    <div class="panel-row">
+      <div class="ring-wrap ring-wrap--desktop">
+        <svg viewBox="0 0 200 200" class="ring">
+          <circle class="ring-bg" cx="100" cy="100" r="88" />
+          <circle
+            class="ring-progress"
+            [ngClass]="timer.phase()"
+            cx="100"
+            cy="100"
+            r="88"
+            [attr.stroke-dasharray]="circumference"
+            [attr.stroke-dashoffset]="dashOffset"
+          />
+        </svg>
+        <div class="ring-pct eyebrow">{{ (timer.progress() * 100) | number: '1.0-0' }}%</div>
+      </div>
+
+      <div class="panel-time">
+        <div class="tabular-nums big-time">{{ formatTime(timer.secondsRemaining()) }}</div>
+        <p class="panel-headline">{{ headline }}</p>
+      </div>
+    </div>
+
+    <hr class="hr divider-tight" />
+
+    <div class="controls">
+      <ion-button class="btn-run" (click)="toggle()">
+        <ion-icon slot="start" [name]="timer.isRunning() ? 'pause' : 'play'"></ion-icon>
+        {{ timer.isRunning() ? 'Pausar' : 'Iniciar' }}
+      </ion-button>
+      <ion-button class="btn-reset" fill="outline" (click)="timer.skip()">
+        <ion-icon slot="start" name="play-skip-forward"></ion-icon>
+        Saltar
+      </ion-button>
+      <ion-button class="btn-reset" fill="outline" (click)="timer.reset()">
+        <ion-icon slot="start" name="refresh"></ion-icon>
+        Reiniciar
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="panel-shortcuts">
+    @for (shortcut of shortcuts; track shortcut.key) {
+      <span class="shortcut">
+        <span class="key">{{ shortcut.key }}</span>{{ shortcut.label }}
+      </span>
+    }
+  </div>
+</div>

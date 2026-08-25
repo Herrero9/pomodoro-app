@@ -1,0 +1,18 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <span class="eyebrow" slot="start">Pomodoro</span>
+    <ion-buttons slot="end">
+      <span class="eyebrow cycle-label">
+        <span class="run-dot" [class.running]="timer.isRunning()"></span>
+        Ciclo {{ currentWorkPeriod }}/{{ timer.settings().sessionsBeforeLongBreak }}
+      </span>
+      <ion-button (click)="theme.setDark(!theme.isDark())">
+        <ion-icon slot="icon-only" [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/settings">
+        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <hr class="hr" />
+</ion-header>

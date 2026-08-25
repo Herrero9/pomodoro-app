@@ -1,21 +1,4 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <span class="eyebrow" slot="start">Pomodoro</span>
-    <ion-buttons slot="end">
-      <span class="eyebrow cycle-label">
-        <span class="run-dot" [class.running]="timer.isRunning()"></span>
-        Ciclo {{ currentWorkPeriod }}/{{ timer.settings().sessionsBeforeLongBreak }}
-      </span>
-      <ion-button (click)="theme.setDark(!theme.isDark())">
-        <ion-icon slot="icon-only" [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
-      </ion-button>
-      <ion-button routerLink="/settings">
-        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <hr class="hr" />
-</ion-header>
+<app-home-header></app-home-header>
 
 <ion-content [fullscreen]="true">
   <!-- Compact layout, used below the desktop breakpoint -->
@@ -97,109 +80,8 @@
 
   <!-- Panel layout (design 1b), used at and above the desktop breakpoint -->
   <div class="layout-desktop">
-    <div class="panel-main">
-      <div class="panel-center">
-        <div class="eyebrow mode-label">{{ phaseLabels[timer.phase()] }} EN CURSO</div>
-
-        <div class="panel-row">
-          <div class="ring-wrap ring-wrap--desktop">
-            <svg viewBox="0 0 200 200" class="ring">
-              <circle class="ring-bg" cx="100" cy="100" r="88" />
-              <circle
-                class="ring-progress"
-                [ngClass]="timer.phase()"
-                cx="100"
-                cy="100"
-                r="88"
-                [attr.stroke-dasharray]="circumference"
-                [attr.stroke-dashoffset]="dashOffset"
-              />
-            </svg>
-            <div class="ring-pct eyebrow">{{ (timer.progress() * 100) | number: '1.0-0' }}%</div>
-          </div>
-
-          <div class="panel-time">
-            <div class="tabular-nums big-time">{{ formatTime(timer.secondsRemaining()) }}</div>
-            <p class="panel-headline">{{ headline }}</p>
-          </div>
-        </div>
-
-        <hr class="hr divider-tight" />
-
-        <div class="controls">
-          <ion-button class="btn-run" (click)="toggle()">
-            <ion-icon slot="start" [name]="timer.isRunning() ? 'pause' : 'play'"></ion-icon>
-            {{ timer.isRunning() ? 'Pausar' : 'Iniciar' }}
-          </ion-button>
-          <ion-button class="btn-reset" fill="outline" (click)="timer.skip()">
-            <ion-icon slot="start" name="play-skip-forward"></ion-icon>
-            Saltar
-          </ion-button>
-          <ion-button class="btn-reset" fill="outline" (click)="timer.reset()">
-            <ion-icon slot="start" name="refresh"></ion-icon>
-            Reiniciar
-          </ion-button>
-        </div>
-      </div>
-
-      <div class="panel-shortcuts">
-        @for (shortcut of shortcuts; track shortcut.key) {
-          <span class="shortcut">
-            <span class="key">{{ shortcut.key }}</span>{{ shortcut.label }}
-          </span>
-        }
-      </div>
-    </div>
-
-    <aside class="panel-side">
-      <div class="side-status">
-        <span class="run-dot" [class.running]="timer.isRunning()"></span>
-        <span class="eyebrow">{{ timer.isRunning() ? 'En marcha' : 'En pausa' }}</span>
-      </div>
-
-      <div class="side-block side-sound">
-        <div class="side-block-head">
-          <span class="eyebrow">Sonido de fondo</span>
-          <span class="eyebrow accent">YouTube</span>
-        </div>
-        <div class="sound-frame">
-          <iframe
-            [src]="soundUrl()"
-            title="Lo-fi para concentrarse"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </div>
-
-      <div class="side-block">
-        <span class="eyebrow">Presets</span>
-        <div class="preset-grid">
-          @for (preset of presets; track preset.key) {
-            <button
-              type="button"
-              class="preset-card"
-              [class.active]="activePresetName() === preset.name"
-              (click)="applyPreset(preset)"
-            >
-              <span class="preset-name-row">
-                <span class="preset-key">{{ preset.key }}</span>{{ preset.name }}
-              </span>
-              <span class="preset-spec">{{ preset.spec }}</span>
-            </button>
-          }
-        </div>
-      </div>
-
-      <div class="side-block side-cycle">
-        <div class="dots-row">
-          @for (dot of progressDots; track $index) {
-            <div class="dot" [class.filled]="dot"></div>
-          }
-        </div>
-        <div class="eyebrow cycle-footer">Ciclo {{ currentWorkPeriod }} · {{ nextLabel }}</div>
-      </div>
-    </aside>
+    <app-panel-main></app-panel-main>
+    <app-panel-side></app-panel-side>
   </div>
 </ion-content>
 

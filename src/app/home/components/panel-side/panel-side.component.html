@@ -1,0 +1,49 @@
+<aside class="panel-side">
+  <div class="side-status">
+    <span class="run-dot" [class.running]="timer.isRunning()"></span>
+    <span class="eyebrow">{{ timer.isRunning() ? 'En marcha' : 'En pausa' }}</span>
+  </div>
+
+  <div class="side-block side-sound">
+    <div class="side-block-head">
+      <span class="eyebrow">Sonido de fondo</span>
+      <span class="eyebrow accent">YouTube</span>
+    </div>
+    <div class="sound-frame">
+      <iframe
+        [src]="soundUrl()"
+        title="Lo-fi para concentrarse"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+
+  <div class="side-block">
+    <span class="eyebrow">Presets</span>
+    <div class="preset-grid">
+      @for (preset of presets; track preset.key) {
+        <button
+          type="button"
+          class="preset-card"
+          [class.active]="activePresetName() === preset.name"
+          (click)="applyPreset(preset)"
+        >
+          <span class="preset-name-row">
+            <span class="preset-key">{{ preset.key }}</span>{{ preset.name }}
+          </span>
+          <span class="preset-spec">{{ preset.spec }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="side-block side-cycle">
+    <div class="dots-row">
+      @for (dot of progressDots; track $index) {
+        <div class="dot" [class.filled]="dot"></div>
+      }
+    </div>
+    <div class="eyebrow cycle-footer">Ciclo {{ currentWorkPeriod }} · {{ nextLabel }}</div>
+  </div>
+</aside>

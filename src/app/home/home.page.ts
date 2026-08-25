@@ -1,16 +1,7 @@
-import { Component, HostListener, computed, effect, signal } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, HostListener, effect, signal } from '@angular/core';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
-import {
-  DEFAULT_SOUND_VIDEO_ID,
-  PHASE_LABELS,
-  PRESETS,
-  REST_IDEAS,
-  Preset,
-  RestIdea,
-  extractYouTubeId,
-} from '../models/pomodoro.model';
+import { PHASE_LABELS, PRESETS, REST_IDEAS, Preset, RestIdea } from '../models/pomodoro.model';
 
 const RADIUS = 88;
 
@@ -25,35 +16,11 @@ export class HomePage {
   readonly presets = PRESETS;
   readonly circumference = 2 * Math.PI * RADIUS;
 
-  readonly soundUrl = computed<SafeResourceUrl>(() => {
-    const id = extractYouTubeId(this.timer.settings().soundVideoId) ?? DEFAULT_SOUND_VIDEO_ID;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube-nocookie.com/embed/${id}?rel=0`
-    );
-  });
-
-  readonly shortcuts = [
-    { key: 'ESPACIO', label: 'Iniciar / pausar' },
-    { key: 'S', label: 'Saltar' },
-    { key: 'R', label: 'Reiniciar' },
-    { key: 'T', label: 'Tema' },
-    { key: '1–4', label: 'Preset' },
-  ];
-
   private readonly restIndex = signal(0);
-
-  readonly activePresetName = computed(() => {
-    const settings = this.timer.settings();
-    const match = this.presets.find(
-      (p) => p.workMinutes === settings.workMinutes && p.breakMinutes === settings.shortBreakMinutes
-    );
-    return match?.name ?? null;
-  });
 
   constructor(
     public timer: TimerService,
-    public theme: ThemeService,
-    private sanitizer: DomSanitizer
+    public theme: ThemeService
   ) {
     effect(() => {
       if (this.timer.phase() !== 'work') {
@@ -82,16 +49,6 @@ export class HomePage {
       return 'En pausa. Retómalo cuando quieras.';
     }
     return 'Listo cuando quieras.';
-  }
-
-  get nextLabel(): string {
-    if (this.timer.phase() !== 'work') {
-      return this.phaseLabels['work'];
-    }
-    const upcoming = this.timer.workPeriodsCompleted() + 1;
-    return upcoming >= this.timer.settings().sessionsBeforeLongBreak
-      ? this.phaseLabels['longBreak']
-      : this.phaseLabels['shortBreak'];
   }
 
   get minsLeftLabel(): string {

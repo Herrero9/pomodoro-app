@@ -68,6 +68,40 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-divider);
 }
 
+.run-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-neutral-400);
+
+  &.running {
+    background: var(--color-accent);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.dots-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-6);
+}
+
+.dot {
+  flex: 1;
+  height: 6px;
+  background: var(--color-neutral-300);
+
+  &.filled {
+    background: var(--color-accent);
+  }
+}
+
 ion-content {
   --background: var(--color-bg);
   --color: var(--color-text);
