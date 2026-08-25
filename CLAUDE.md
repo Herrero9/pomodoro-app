@@ -33,7 +33,7 @@ Both services depend on [`StorageService`](src/app/services/storage.service.ts),
 
 - `home-header` — toolbar (cycle counter, theme toggle, link to settings).
 - `panel-compact` — the single-column layout used below the desktop breakpoint.
-- `panel-main` / `panel-side` — the two desktop panels (ring + controls; sound, presets, cycle progress).
+- `panel-main` / `panel-side` — the two desktop panels (title + ring + controls; sound, presets, cycle progress). `panel-main` is also the container the fluid sizes below resolve against.
 - `break-overlay` — full-window takeover shown during a break. It is created fresh each break, which is what picks the first `REST_IDEAS` suggestion.
 - `period-history` — the list of completed periods.
 
@@ -42,6 +42,8 @@ Components inject `TimerService`/`ThemeService` directly instead of taking `@Inp
 **Shared presentational pieces** live in [`src/app/shared/`](src/app/shared/) (`SharedModule`, imported by feature modules): `app-progress-ring` (SVG countdown ring, takes `progress` and a `compact`/`panel` variant, projects its centre content), `app-progress-dots` (cycle dots, projects extra content), `app-timer-controls` (start/pause/skip/reset, `showLabels` input) and the `mmss` pipe used by every countdown readout.
 
 **Styling conventions**: [`src/theme/variables.scss`](src/theme/variables.scss) holds every design token — palette, derived text tints, type sizes, spacing, rule widths (`--rule-hairline`/`--rule-thick`), control height, ring geometry — for both the light `:root` and the `body.dark` palette; a token defined in terms of another must be redeclared in `body.dark`. Breakpoints cannot be custom properties, so they are Sass variables in [`src/theme/_breakpoints.scss`](src/theme/_breakpoints.scss) (`@use '.../breakpoints' as bp;`). [`src/global.scss`](src/global.scss) is limited to Ionic's base CSS, a few reused utility classes (`.eyebrow`, `.hr`/`.divider-tight`, `.tabular-nums`, `.run-dot`) and Ionic component defaults remapped onto the tokens. Component stylesheets should reference tokens rather than raw values.
+
+**Fluid sizing on the desktop panels**: `.panel-main` declares `container-type: inline-size` / `container-name: panel-main`, and everything that grows with the window — the title, the countdown, the `%` label and `--ring-size-panel` — is sized in container units (`cqi`) against it, not in `vw`. Viewport units are wrong here: `.panel-side` holds a fluid fixed width (`clamp(var(--sidebar-min-width), 26vw, 42rem)`) rather than a flex share, so the main panel's width is *window minus sidebar* and `vw` overflows it on narrow desktops. Where a size could also outgrow the panel's height, the clamp takes a `min()` with a `vh` term (`min(40cqi, 56vh)`) so a wide-but-short window shrinks it instead of pushing the controls off-panel. The `panel` ring variant is only ever rendered inside this container — `cqi` in `--ring-size-panel` would resolve against the viewport anywhere else.
 
 **Settings page**: `SettingsPage` edits a local copy of `PomodoroSettings` (`form`) and only commits it via `timer.updateSettings()` on explicit save, clamping numeric fields to be positive integers.
 
