@@ -7,13 +7,27 @@
   <div class="side-block side-sound">
     <div class="side-block-head">
       <span class="eyebrow">Sonido de fondo</span>
-      <span class="eyebrow accent">YouTube</span>
+      <!-- Switching source here writes straight to the settings, so the choice
+           survives a reload just like the one made on the settings page. -->
+      <div class="source-switch" role="group" aria-label="Fuente del sonido de fondo">
+        @for (source of soundSources; track source) {
+          <button
+            type="button"
+            class="eyebrow source-option"
+            [class.active]="timer.soundSource() === source"
+            [attr.aria-pressed]="timer.soundSource() === source"
+            (click)="timer.setSoundSource(source)"
+          >
+            {{ soundSourceLabels[source] }}
+          </button>
+        }
+      </div>
     </div>
     <div class="sound-frame">
       <iframe
         [src]="soundUrl()"
-        title="Sonido de fondo para concentrarse"
-        allow="autoplay; encrypted-media; picture-in-picture"
+        [title]="'Sonido de fondo para concentrarse (' + timer.soundSourceLabel() + ')'"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         allowfullscreen
       ></iframe>
     </div>

@@ -40,9 +40,27 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  gap: var(--space-2);
   margin-bottom: var(--space-2);
+}
 
-  .accent {
+// Two text labels acting as a toggle: only the selected source is accented, so
+// the head keeps reading as a caption rather than as a pair of buttons.
+.source-switch {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.source-option {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-subtle);
+  font-family: var(--font-body);
+  cursor: pointer;
+
+  &.active {
     color: var(--color-accent);
   }
 }

@@ -5,13 +5,29 @@
 
 export type PomodoroPhase = 'work' | 'shortBreak' | 'longBreak';
 
+/** Where the background sound is embedded from. */
+export type SoundSource = 'youtube' | 'spotify';
+
+/** Every source, in the order the pickers list them. */
+export const SOUND_SOURCES: SoundSource[] = ['youtube', 'spotify'];
+
+export const SOUND_SOURCE_LABELS: Record<SoundSource, string> = {
+  youtube: 'YouTube',
+  spotify: 'Spotify',
+};
+
 /** User-editable configuration, persisted between sessions. */
 export interface PomodoroSettings {
   workMinutes: number;
   shortBreakMinutes: number;
   longBreakMinutes: number;
   sessionsBeforeLongBreak: number;
+  /** Which of the two references below is the one actually embedded. */
+  soundSource: SoundSource;
+  /** YouTube video ID — see `extractYouTubeId`. */
   soundVideoId: string;
+  /** Spotify embed path, `type/id` — see `extractSpotifyRef`. */
+  soundSpotifyRef: string;
 }
 
 /** A work or break period the user actually ran to completion. */
@@ -22,13 +38,17 @@ export interface CompletedPeriod {
 }
 
 export const DEFAULT_SOUND_VIDEO_ID = 'jfKfPfyJRdk';
+/** Spotify's "lofi beats" playlist, the counterpart of the default video. */
+export const DEFAULT_SOUND_SPOTIFY_REF = 'playlist/37i9dQZF1DWWQRwui0ExPn';
 
 export const DEFAULT_SETTINGS: PomodoroSettings = {
   workMinutes: 25,
   shortBreakMinutes: 5,
   longBreakMinutes: 30,
   sessionsBeforeLongBreak: 4,
+  soundSource: 'youtube',
   soundVideoId: DEFAULT_SOUND_VIDEO_ID,
+  soundSpotifyRef: DEFAULT_SOUND_SPOTIFY_REF,
 };
 
 const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
@@ -71,6 +91,54 @@ export function extractYouTubeId(input: string): string | null {
   }
 
   return null;
+}
+
+const SPOTIFY_ID_PATTERN = /^[A-Za-z0-9]{22}$/;
+const SPOTIFY_HOSTNAMES = new Set(['open.spotify.com', 'play.spotify.com']);
+const SPOTIFY_EMBED_TYPES = new Set(['track', 'album', 'playlist', 'artist', 'show', 'episode']);
+
+/** Pairs a Spotify content type with an ID only when both are usable in an embed. */
+function spotifyRef(type: string, id: string): string | null {
+  return SPOTIFY_EMBED_TYPES.has(type) && SPOTIFY_ID_PATTERN.test(id) ? `${type}/${id}` : null;
+}
+
+/**
+ * Normalizes a Spotify reference into the `type/id` path its embed player takes
+ * (`playlist/37i9dQZF1DWWQRwui0ExPn`). Accepts a shared link — with or without
+ * the `/intl-xx` locale segment Spotify inserts — a `spotify:` URI, an embed
+ * URL, or an already normalized path. Returns null if unrecognized.
+ */
+export function extractSpotifyRef(input: string): string | null {
+  const trimmed = input.trim();
+
+  const uri = trimmed.match(/^spotify:([a-z]+):([A-Za-z0-9]+)$/);
+  if (uri) {
+    return spotifyRef(uri[1], uri[2]);
+  }
+
+  const bare = trimmed.match(/^([a-z]+)\/([A-Za-z0-9]+)$/);
+  if (bare) {
+    return spotifyRef(bare[1], bare[2]);
+  }
+
+  let url: URL;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    return null;
+  }
+
+  if (!SPOTIFY_HOSTNAMES.has(url.hostname)) {
+    return null;
+  }
+
+  // Both the `/embed` prefix and the locale segment are optional noise around
+  // the [type, id] pair the player actually needs.
+  const segments = url.pathname
+    .split('/')
+    .filter((segment) => segment && segment !== 'embed' && !/^intl-[a-z-]{2,5}$/.test(segment));
+
+  return segments.length === 2 ? spotifyRef(segments[0], segments[1]) : null;
 }
 
 /**

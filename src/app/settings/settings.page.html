@@ -60,17 +60,52 @@
 
     <div class="eyebrow section-label">Sonido de fondo</div>
 
+    <div class="source-picker" role="group" aria-label="Fuente del sonido de fondo">
+      @for (source of soundSources; track source) {
+        <button
+          type="button"
+          class="source-card"
+          [class.active]="form.soundSource === source"
+          [attr.aria-pressed]="form.soundSource === source"
+          (click)="form.soundSource = source"
+        >
+          {{ soundSourceLabels[source] }}
+        </button>
+      }
+    </div>
+
     <ion-list>
-      <ion-item lines="none">
-        <ion-input
-          label="Vídeo de YouTube"
-          labelPlacement="stacked"
-          placeholder="Pega la URL o el ID del vídeo"
-          [(ngModel)]="form.soundVideoId"
-          name="soundVideoId"
-        ></ion-input>
-      </ion-item>
+      <!-- Only the selected source is editable, but both references stay in the
+           settings, so switching back and forth never loses the other one. -->
+      @if (form.soundSource === 'spotify') {
+        <ion-item lines="none">
+          <ion-input
+            label="Lista, álbum o pista de Spotify"
+            labelPlacement="stacked"
+            placeholder="Pega el enlace de Spotify"
+            [(ngModel)]="form.soundSpotifyRef"
+            name="soundSpotifyRef"
+          ></ion-input>
+        </ion-item>
+      } @else {
+        <ion-item lines="none">
+          <ion-input
+            label="Vídeo de YouTube"
+            labelPlacement="stacked"
+            placeholder="Pega la URL o el ID del vídeo"
+            [(ngModel)]="form.soundVideoId"
+            name="soundVideoId"
+          ></ion-input>
+        </ion-item>
+      }
     </ion-list>
+
+    @if (form.soundSource === 'spotify') {
+      <p class="field-hint">
+        Spotify solo reproduce las pistas enteras si tienes la sesión iniciada en este navegador;
+        si no, sonarán fragmentos de 30 segundos.
+      </p>
+    }
 
     <ion-button expand="block" type="submit" class="save-btn">Guardar</ion-button>
   </form>

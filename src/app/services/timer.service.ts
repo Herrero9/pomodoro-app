@@ -8,6 +8,8 @@ import {
   PomodoroSettings,
   PHASE_LABELS,
   Preset,
+  SOUND_SOURCE_LABELS,
+  SoundSource,
   headlineFor,
 } from '../models/pomodoro.model';
 
@@ -69,6 +71,10 @@ export class TimerService implements OnDestroy {
   readonly phaseLabel = computed(() => PHASE_LABELS[this.phase()]);
   readonly nextPhaseLabel = computed(() => PHASE_LABELS[this.nextPhase()]);
 
+  /** Where the background sound comes from, and how the sound panel labels it. */
+  readonly soundSource = computed(() => this.settings().soundSource);
+  readonly soundSourceLabel = computed(() => SOUND_SOURCE_LABELS[this.soundSource()]);
+
   readonly headline = computed(() =>
     headlineFor(this.phase(), this.isRunning(), this.progress() > 0)
   );
@@ -128,6 +134,11 @@ export class TimerService implements OnDestroy {
   /** Jumps to the next phase immediately, without crediting the skipped time as completed. */
   skip(): void {
     this.advancePhase(false);
+  }
+
+  /** Switches the background sound between YouTube and Spotify. */
+  setSoundSource(source: SoundSource): Promise<void> {
+    return this.updateSettings({ ...this.settings(), soundSource: source });
   }
 
   /** Applies a preset's durations, leaving the rest of the settings untouched. */
