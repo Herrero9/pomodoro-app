@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TimerService } from '../../../services/timer.service';
-import { SHORTCUTS } from '../../../models/pomodoro.model';
+import { FOCUS_SESSION_TITLE, SHORTCUTS } from '../../../models/pomodoro.model';
 
 /** Left-hand panel of the desktop layout: ring, countdown and controls. */
 @Component({
@@ -10,6 +10,7 @@ import { SHORTCUTS } from '../../../models/pomodoro.model';
   standalone: false,
 })
 export class PanelMainComponent {
+  readonly sessionTitle = FOCUS_SESSION_TITLE;
   readonly shortcuts = SHORTCUTS;
 
   readonly timer = inject(TimerService);

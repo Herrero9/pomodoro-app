@@ -73,6 +73,12 @@ export function extractYouTubeId(input: string): string | null {
   return null;
 }
 
+/**
+ * Title of the desktop main panel. The break overlay covers the panel during a
+ * break, so this only ever reads over a work phase.
+ */
+export const FOCUS_SESSION_TITLE = 'Sesión de concentración en curso:';
+
 export const PHASE_LABELS: Record<PomodoroPhase, string> = {
   work: 'Trabajo',
   shortBreak: 'Descanso corto',

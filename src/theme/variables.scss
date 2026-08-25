@@ -74,7 +74,15 @@
   // The SVG viewBox is 200×200 with r=88, so the stroke width is in viewBox
   // units while the two sizes below are the rendered box.
   --ring-size: 268px; // compact (mobile) layout
-  --ring-size-panel: 210px; // desktop panel layout
+  // Desktop panel layout: fluid, so the ring keeps its presence on a wide
+  // window. `cqi` resolves against the `panel-main` container declared in
+  // panel-main.component.scss, which is the only place the panel variant is
+  // rendered -- sizing it off the viewport would overflow the panel, since the
+  // sidebar holds on to --sidebar-min-width.
+  // The `vh` term is the height guard: on a wide-but-short window (an ultrawide
+  // at 1080, a laptop with a small browser height) 36cqi alone would push the
+  // controls off the panel.
+  --ring-size-panel: clamp(200px, min(40cqi, 56vh), 760px);
   --ring-stroke: 13;
 
   // ── Ionic core variables ─────────────────────────────────────────

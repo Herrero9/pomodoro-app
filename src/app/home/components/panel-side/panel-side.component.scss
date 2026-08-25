@@ -4,7 +4,10 @@
 }
 
 .panel-side {
-  flex: 3 1 0;
+  // Fluid fixed width rather than a flex share: a percentage of a wide window
+  // left this too narrow next to the countdown, and --sidebar-min-width alone
+  // only kicks in on small ones. The main panel absorbs whatever is left.
+  flex: 0 0 clamp(var(--sidebar-min-width), 26vw, 42rem);
   min-width: var(--sidebar-min-width);
   display: flex;
   flex-direction: column;
