@@ -1,47 +1,39 @@
 <aside class="panel-side">
-  <div class="side-status">
+  <ion-chip outline="true" class="side-status">
     <span class="run-dot" [class.running]="timer.isRunning()"></span>
-    <span class="eyebrow">{{ timer.isRunning() ? 'En marcha' : 'En pausa' }}</span>
-  </div>
+    <ion-label>{{ timer.isRunning() ? 'En marcha' : 'En pausa' }}</ion-label>
+  </ion-chip>
 
-  <div class="side-block side-sound">
-    <div class="side-block-head">
-      <span class="eyebrow">Sonido de fondo</span>
-      <span class="eyebrow accent">YouTube</span>
-    </div>
-    <div class="sound-frame">
-      <iframe
-        [src]="soundUrl()"
-        title="Sonido de fondo para concentrarse"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-    </div>
-  </div>
+  <ion-card class="side-card side-sound">
+    <ion-card-header>
+      <div class="side-block-head">
+        <ion-card-title>Sonido de fondo</ion-card-title>
+        <ion-note color="primary" class="eyebrow">YouTube</ion-note>
+      </div>
+    </ion-card-header>
+    <ion-card-content class="sound-content">
+      <app-sound-player></app-sound-player>
+    </ion-card-content>
+  </ion-card>
 
-  <div class="side-block">
-    <span class="eyebrow">Presets</span>
-    <div class="preset-grid">
-      @for (preset of presets; track preset.key) {
-        <button
-          type="button"
-          class="preset-card"
-          [class.active]="activePresetName() === preset.name"
-          (click)="timer.applyPreset(preset)"
-        >
-          <span class="preset-name-row">
-            <span class="preset-key">{{ preset.key }}</span>{{ preset.name }}
-          </span>
-          <span class="preset-spec">{{ preset.spec }}</span>
-        </button>
-      }
-    </div>
-  </div>
+  <ion-card class="side-card">
+    <ion-card-header>
+      <ion-card-title>Presets</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <app-preset-grid></app-preset-grid>
+    </ion-card-content>
+  </ion-card>
 
-  <div class="side-block side-cycle">
-    <app-progress-dots></app-progress-dots>
-    <div class="eyebrow cycle-footer">
-      Ciclo {{ timer.currentCycle() }} · {{ timer.nextPhaseLabel() }}
-    </div>
-  </div>
+  <ion-card class="side-card side-cycle">
+    <ion-card-content>
+      <app-progress-dots></app-progress-dots>
+      <div class="eyebrow cycle-footer">
+        Ciclo {{ timer.currentCycle() }} · Luego: {{ timer.nextPhaseSummary() }}
+      </div>
+      <div class="eyebrow cycle-today">
+        Hoy: {{ timer.workPeriodsToday() }} periodos · {{ timer.focusMinutesToday() }} min
+      </div>
+    </ion-card-content>
+  </ion-card>
 </aside>

@@ -1,6 +1,8 @@
 @use '../../../../theme/breakpoints' as bp;
 
 // Covers the window, including the header and the Ionic content behind it.
+// The fill is the palette primary, so every piece of copy inside runs on its
+// contrast colour rather than on --color-text.
 :host {
   position: fixed;
   inset: 0;
@@ -9,24 +11,24 @@
   flex-direction: column;
   padding: var(--space-6) var(--space-4);
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-on-accent);
 }
 
 .break-top {
   display: flex;
   justify-content: space-between;
   font-size: var(--font-size-sm);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-wide);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-eyebrow);
 
   .muted {
-    opacity: 0.75;
+    color: var(--color-on-accent-muted);
   }
 }
 
-// Local rule colour: over the accent fill, --color-divider would disappear.
+// Local rule colour: over the primary fill, --color-divider would disappear.
 .break-divider {
-  height: var(--rule-thick);
+  height: var(--rule-hairline);
   border: 0;
   margin: var(--space-4) 0 0;
   background: var(--color-on-accent-rule);
@@ -51,31 +53,29 @@
 .break-title {
   margin: var(--space-3) 0 0;
   font-size: clamp(36px, 8vw, 88px);
-  line-height: 1;
-  color: var(--color-bg);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--color-on-accent);
 }
 
 .break-text {
   margin: var(--space-4) 0 0;
   font-size: var(--font-size-md);
   line-height: 1.6;
-  opacity: 0.9;
+  color: var(--color-on-accent-muted);
 }
 
 .break-actions {
   display: flex;
   gap: var(--space-3);
   margin-top: var(--space-6);
-}
 
-.break-btn-primary {
-  --background: var(--color-bg);
-  --color: var(--color-accent);
-}
-
-.break-btn-secondary {
-  --border-color: var(--color-on-accent-border);
-  --color: var(--color-bg);
+  ion-button {
+    height: var(--control-height);
+    margin: 0;
+    --padding-start: var(--control-padding-x);
+    --padding-end: var(--control-padding-x);
+  }
 }
 
 .break-foot {

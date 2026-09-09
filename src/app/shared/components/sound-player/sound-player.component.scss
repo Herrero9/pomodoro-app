@@ -1,0 +1,27 @@
+// `display: contents` so the host does not sit between the frame and whatever
+// flex or grid container the layout puts it in.
+:host {
+  display: contents;
+}
+
+.sound-frame {
+  position: relative;
+  flex: 1;
+  min-height: 120px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--color-neutral-300);
+
+  &--fixed {
+    flex: none;
+    aspect-ratio: 16 / 9;
+  }
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}

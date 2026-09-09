@@ -1,56 +1,194 @@
-// Design tokens adapted from the "Interval" Claude Design canvas —
-// flat modernist system: sharp corners, hairline rules, Archivo type,
-// warm cream/terracotta palette (design 1b).
+// Design tokens.
 //
-// Everything a component might hard-code (colors, spacing, type sizes, rule
-// widths, control heights, ring geometry) is declared here so a component
-// stylesheet only ever references `var(--…)`. Breakpoints live in
-// `_breakpoints.scss` instead, since media queries cannot read custom
-// properties.
+// The Ionic design system is the source of truth here: this file declares a
+// full Ionic palette (semantic colours plus the `--ion-*-color-step-*` ramps
+// that Ionic 9 components resolve their own surfaces, borders and muted text
+// against) in the app's navy/platinum hues, and then exposes a thin layer of
+// app-level aliases on top of it.
+//
+// Practical consequence: a component stylesheet references `var(--color-…)`
+// and gets whatever the Ionic palette says, so a native `ion-card` and a
+// hand-rolled panel are tinted by the same numbers. Changing a hue means
+// changing it once, in the palette block below.
+//
+// Breakpoints live in `_breakpoints.scss` instead, since media queries cannot
+// read custom properties.
+
+// ── App aliases ─────────────────────────────────────────────────────────────
+// Emitted into both palettes. It has to be a mixin rather than a single
+// `:root` block: a custom property whose value is `var(--x)` is substituted
+// where it is *declared*, not where it is used, so aliases declared once on
+// `:root` would keep the light values forever inside `body.dark`.
+@mixin app-aliases {
+  --color-bg: var(--ion-background-color);
+  --color-surface: var(--ion-item-background);
+  --color-text: var(--ion-text-color);
+  --color-accent: var(--ion-color-primary);
+  --color-divider: var(--ion-border-color);
+
+  // Neutral fills, taken off the background ramp so they sit between the
+  // surface and the text in whichever palette is active.
+  --color-neutral-300: var(--ion-background-color-step-150);
+  --color-neutral-400: var(--ion-background-color-step-350);
+  --color-neutral-500: var(--ion-background-color-step-500);
+
+  // Secondary copy, taken off the text ramp (Ionic's own convention for
+  // de-emphasised text) rather than an alpha of the text colour.
+  --color-text-muted: var(--ion-text-color-step-350);
+  --color-text-subtle: var(--ion-text-color-step-500);
+
+  // Copy laid over a primary-filled surface (the break overlay), where the
+  // foreground is the primary contrast colour instead of the text colour.
+  --color-on-accent: var(--ion-color-primary-contrast);
+  --color-on-accent-muted: rgba(var(--ion-color-primary-contrast-rgb), 0.72);
+  --color-on-accent-rule: rgba(var(--ion-color-primary-contrast-rgb), 0.28);
+}
 
 :root {
-  // ── Palette ──────────────────────────────────────────────────────
-  --color-bg: #f0e9df;
-  --color-surface: #f8f3ea;
-  --color-text: #2b2320;
-  --color-accent: #b5623c;
-  --color-accent-2: #b5623c;
-  --color-divider: #4a3d36;
+  // ── Ionic palette · light ─────────────────────────────────────────────────
+  // Platinum ground, prussian-blue ink, twilight-indigo primary. Surfaces are
+  // white so Ionic's elevated components (cards, inset lists, inputs) read as
+  // lifted off the ground the way the design system expects.
+  --ion-background-color: #eef0f5;
+  --ion-background-color-rgb: 238, 240, 245;
+  --ion-text-color: #000932;
+  --ion-text-color-rgb: 0, 9, 50;
 
-  --color-neutral-300: #d8cec0;
-  --color-neutral-400: #bdb1a1;
-  --color-neutral-500: #9a8d7d;
+  --ion-item-background: #ffffff;
+  --ion-card-background: #ffffff;
+  --ion-toolbar-background: #ffffff;
+  --ion-border-color: #d6d9e2;
 
-  --color-accent-100: #f7ece4;
-  --color-accent-800: #6d3620;
+  --ion-color-primary: #2c3c63;
+  --ion-color-primary-rgb: 44, 60, 99;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #273557;
+  --ion-color-primary-tint: #415073;
 
-  // Text tints used for secondary copy. Derived from --color-text so they
-  // follow the palette automatically in both themes.
-  --color-text-muted: color-mix(in srgb, var(--color-text) 55%, transparent);
-  --color-text-subtle: color-mix(in srgb, var(--color-text) 50%, transparent);
+  --ion-color-secondary: #505e7e;
+  --ion-color-secondary-rgb: 80, 94, 126;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #46536f;
+  --ion-color-secondary-tint: #626e8b;
 
-  // Same idea for copy laid over the accent-filled break overlay, where the
-  // foreground is --color-bg instead of --color-text.
-  --color-on-accent-muted: color-mix(in srgb, var(--color-bg) 75%, transparent);
-  --color-on-accent-rule: color-mix(in srgb, var(--color-bg) 50%, transparent);
-  --color-on-accent-border: color-mix(in srgb, var(--color-bg) 60%, transparent);
+  --ion-color-tertiary: #001242;
+  --ion-color-tertiary-rgb: 0, 18, 66;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #00103a;
+  --ion-color-tertiary-tint: #1a2a55;
 
-  // ── Typography ───────────────────────────────────────────────────
-  --font-heading: 'Archivo', system-ui, sans-serif;
-  --font-body: 'Archivo', system-ui, sans-serif;
+  --ion-color-medium: #6b779a;
+  --ion-color-medium-rgb: 107, 119, 154;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #5e6988;
+  --ion-color-medium-tint: #7a85a4;
 
-  --font-size-key: 10px; // keycaps, phase labels
-  --font-size-eyebrow: 11px; // uppercase micro-labels
-  --font-size-sm: 12px;
-  --font-size-control: 14px; // buttons
+  --ion-color-light: #e7e9ee;
+  --ion-color-light-rgb: 231, 233, 238;
+  --ion-color-light-contrast: #000932;
+  --ion-color-light-contrast-rgb: 0, 9, 50;
+  --ion-color-light-shade: #cbcdd1;
+  --ion-color-light-tint: #e9ebf0;
+
+  --ion-color-dark: #000932;
+  --ion-color-dark-rgb: 0, 9, 50;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #00082c;
+  --ion-color-dark-tint: #1a2247;
+
+  // Status colours keep Ionic's defaults: they have to stay recognisable.
+  --ion-color-success: #2dd55b;
+  --ion-color-success-rgb: 45, 213, 91;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #28bb50;
+  --ion-color-success-tint: #42d96b;
+
+  --ion-color-warning: #ffc409;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0ac08;
+  --ion-color-warning-tint: #ffca22;
+
+  --ion-color-danger: #c5000f;
+  --ion-color-danger-rgb: 197, 0, 15;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ad000d;
+  --ion-color-danger-tint: #cb1a27;
+
+  // Ramps. Ionic 9 components (item borders, placeholders, notes, disabled
+  // states, ripples) read these directly; without them they fall back to the
+  // stock grey scale and drift away from the palette above.
+  --ion-background-color-step-50: #e2e4eb;
+  --ion-background-color-step-100: #d6d9e2;
+  --ion-background-color-step-150: #cacdd8;
+  --ion-background-color-step-200: #bec2ce;
+  --ion-background-color-step-250: #b3b6c4;
+  --ion-background-color-step-300: #a7abbb;
+  --ion-background-color-step-350: #9b9fb1;
+  --ion-background-color-step-400: #8f94a7;
+  --ion-background-color-step-450: #83889d;
+  --ion-background-color-step-500: #777d94;
+  --ion-background-color-step-550: #6b718a;
+  --ion-background-color-step-600: #5f6580;
+  --ion-background-color-step-650: #535a76;
+  --ion-background-color-step-700: #474e6d;
+  --ion-background-color-step-750: #3c4363;
+  --ion-background-color-step-800: #303759;
+  --ion-background-color-step-850: #242c4f;
+  --ion-background-color-step-900: #182046;
+  --ion-background-color-step-950: #0c153c;
+
+  --ion-text-color-step-50: #0c153c;
+  --ion-text-color-step-100: #182046;
+  --ion-text-color-step-150: #242c4f;
+  --ion-text-color-step-200: #303759;
+  --ion-text-color-step-250: #3c4363;
+  --ion-text-color-step-300: #474e6d;
+  --ion-text-color-step-350: #535a76;
+  --ion-text-color-step-400: #5f6580;
+  --ion-text-color-step-450: #6b718a;
+  --ion-text-color-step-500: #777d94;
+  --ion-text-color-step-550: #83889d;
+  --ion-text-color-step-600: #8f94a7;
+  --ion-text-color-step-650: #9b9fb1;
+  --ion-text-color-step-700: #a7abbb;
+  --ion-text-color-step-750: #b3b6c4;
+  --ion-text-color-step-800: #bec2ce;
+  --ion-text-color-step-850: #cacdd8;
+  --ion-text-color-step-900: #d6d9e2;
+  --ion-text-color-step-950: #e2e4eb;
+
+  @include app-aliases;
+
+  // ── Typography ────────────────────────────────────────────────────────────
+  // Ionic's own stack, so the app matches the platform the way the rest of the
+  // design system assumes (San Francisco on iOS, Roboto on Android).
+  --ion-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans", sans-serif;
+  --font-body: var(--ion-font-family);
+  --font-heading: var(--ion-font-family);
+
+  --font-size-key: 11px; // keycaps
+  --font-size-eyebrow: 12px; // micro-labels
+  --font-size-sm: 13px;
+  --font-size-control: 15px; // buttons
   --font-size-md: 15px; // body copy
-  --font-size-lg: 25px; // mobile headline
+  --font-size-lg: 26px; // mobile headline
 
-  --weight-bold: 800;
-  --tracking-eyebrow: 0.1em;
-  --tracking-wide: 0.12em;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700; // Ionic's heaviest weight; the old 800 has no Roboto cut
+  --tracking-eyebrow: 0.06em;
 
-  // ── Spacing ──────────────────────────────────────────────────────
+  // ── Spacing ───────────────────────────────────────────────────────────────
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -58,19 +196,27 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  // ── Shape & structure ────────────────────────────────────────────
-  --radius: 0px; // the design is deliberately square-cornered
-  --rule-hairline: 1px; // divisions inside a panel
-  --rule-thick: 2px; // divisions between panels / major sections
+  // ── Shape & elevation ─────────────────────────────────────────────────────
+  // Ionic's grammar is rounded surfaces separated by elevation rather than by
+  // rules, so there is one rule width left -- a hairline, for the few dividers
+  // that still earn their place -- and a shadow instead of a heavy stroke.
+  --radius-sm: 8px;
+  --radius: 12px; // buttons, preset tiles, inputs
+  --radius-lg: 16px; // cards and inset lists
+  --radius-pill: 999px;
 
-  --control-height: 52px; // primary buttons row
-  --control-padding-x: 18px;
+  --rule-hairline: 1px;
+
+  --shadow-1: 0 1px 2px rgba(0, 9, 50, 0.06), 0 1px 3px rgba(0, 9, 50, 0.08);
+
+  --control-height: 48px; // Ionic's large-button height
+  --control-padding-x: 20px;
   --gap-controls: 10px;
 
   --dot-size: 6px; // cycle-progress dots and the running indicator
   --sidebar-min-width: 21rem;
 
-  // ── Countdown ring ───────────────────────────────────────────────
+  // ── Countdown ring ────────────────────────────────────────────────────────
   // The SVG viewBox is 200×200 with r=88, so the stroke width is in viewBox
   // units while the two sizes below are the rendered box.
   --ring-size: 268px; // compact (mobile) layout
@@ -83,62 +229,132 @@
   // at 1080, a laptop with a small browser height) 36cqi alone would push the
   // controls off the panel.
   --ring-size-panel: clamp(200px, min(40cqi, 56vh), 760px);
-  --ring-stroke: 13;
-
-  // ── Ionic core variables ─────────────────────────────────────────
-  // Keep native components (ion-header, ion-item…) in sync with the design
-  // tokens above instead of Ionic's default palette.
-  --ion-background-color: var(--color-bg);
-  --ion-text-color: var(--color-text);
-  --ion-toolbar-background: var(--color-bg);
-  --ion-toolbar-color: var(--color-text);
-  --ion-item-background: var(--color-bg);
-  --ion-border-color: var(--color-divider);
-  --ion-font-family: var(--font-body);
-
-  --ion-color-primary: #b5623c;
-  --ion-color-primary-rgb: 181, 98, 60;
-  --ion-color-primary-contrast: #f0e9df;
-  --ion-color-primary-contrast-rgb: 240, 233, 223;
-  --ion-color-primary-shade: #8a4526;
-  --ion-color-primary-tint: #cf8360;
+  --ring-stroke: 12;
 }
 
 body.dark {
-  --color-bg: #221d1a;
-  --color-surface: #2b2521;
-  --color-text: #f2ebe1;
-  --color-accent: #c07049;
-  --color-accent-2: #c07049;
-  --color-divider: rgba(242, 235, 225, 0.28);
+  // Same ramp read bottom-up: prussian-blue ground, platinum ink. The primary
+  // is a lightened dusk blue rather than a ramp stop, because every primary
+  // fill in the app carries its contrast colour as the foreground -- dusk blue
+  // itself would leave the break overlay's copy unreadable.
+  --ion-background-color: #000722;
+  --ion-background-color-rgb: 0, 7, 34;
+  --ion-text-color: #e7e9ee;
+  --ion-text-color-rgb: 231, 233, 238;
 
-  --color-neutral-300: rgba(242, 235, 225, 0.16);
-  --color-neutral-400: rgba(242, 235, 225, 0.35);
-  --color-neutral-500: rgba(242, 235, 225, 0.5);
+  --ion-item-background: #0c122c;
+  --ion-card-background: #0c122c;
+  --ion-toolbar-background: #0c122c;
+  --ion-border-color: #232941;
 
-  --ion-color-primary: #c07049;
-  --ion-color-primary-rgb: 192, 112, 73;
-  --ion-color-primary-contrast: #221d1a;
-  --ion-color-primary-contrast-rgb: 34, 29, 26;
-  --ion-color-primary-shade: #a4552f;
-  --ion-color-primary-tint: #e0b39a;
+  --ion-color-primary: #929eb9;
+  --ion-color-primary-rgb: 146, 158, 185;
+  --ion-color-primary-contrast: #000722;
+  --ion-color-primary-contrast-rgb: 0, 7, 34;
+  --ion-color-primary-shade: #808ba3;
+  --ion-color-primary-tint: #9da8c0;
 
-  // Custom properties don't re-resolve their var() references per descendant —
-  // a var(--color-bg) captured once on :root stays light forever. Redeclare
-  // every token built on top of another one here so it picks up this scope's
-  // dark values instead.
-  --color-text-muted: color-mix(in srgb, var(--color-text) 55%, transparent);
-  --color-text-subtle: color-mix(in srgb, var(--color-text) 50%, transparent);
-  --color-on-accent-muted: color-mix(in srgb, var(--color-bg) 75%, transparent);
-  --color-on-accent-rule: color-mix(in srgb, var(--color-bg) 50%, transparent);
-  --color-on-accent-border: color-mix(in srgb, var(--color-bg) 60%, transparent);
+  --ion-color-secondary: #b7c0d3;
+  --ion-color-secondary-rgb: 183, 192, 211;
+  --ion-color-secondary-contrast: #000722;
+  --ion-color-secondary-contrast-rgb: 0, 7, 34;
+  --ion-color-secondary-shade: #a1a9ba;
+  --ion-color-secondary-tint: #bec6d7;
 
-  --ion-background-color: var(--color-bg);
-  --ion-text-color: var(--color-text);
-  --ion-toolbar-background: var(--color-bg);
-  --ion-toolbar-color: var(--color-text);
-  --ion-item-background: var(--color-bg);
-  --ion-border-color: var(--color-divider);
+  --ion-color-tertiary: #7d8bb0;
+  --ion-color-tertiary-rgb: 125, 139, 176;
+  --ion-color-tertiary-contrast: #000722;
+  --ion-color-tertiary-contrast-rgb: 0, 7, 34;
+  --ion-color-tertiary-shade: #6e7a9b;
+  --ion-color-tertiary-tint: #8a97b8;
+
+  --ion-color-medium: #8b96b2;
+  --ion-color-medium-rgb: 139, 150, 178;
+  --ion-color-medium-contrast: #000722;
+  --ion-color-medium-contrast-rgb: 0, 7, 34;
+  --ion-color-medium-shade: #7a849d;
+  --ion-color-medium-tint: #97a1ba;
+
+  --ion-color-light: #161e3f;
+  --ion-color-light-rgb: 22, 30, 63;
+  --ion-color-light-contrast: #e7e9ee;
+  --ion-color-light-contrast-rgb: 231, 233, 238;
+  --ion-color-light-shade: #131a37;
+  --ion-color-light-tint: #2d3552;
+
+  --ion-color-dark: #e7e9ee;
+  --ion-color-dark-rgb: 231, 233, 238;
+  --ion-color-dark-contrast: #000722;
+  --ion-color-dark-contrast-rgb: 0, 7, 34;
+  --ion-color-dark-shade: #cbcdd1;
+  --ion-color-dark-tint: #e9ebf0;
+
+  --ion-color-success: #2dd55b;
+  --ion-color-success-rgb: 45, 213, 91;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #28bb50;
+  --ion-color-success-tint: #42d96b;
+
+  --ion-color-warning: #ffce31;
+  --ion-color-warning-rgb: 255, 206, 49;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0b52b;
+  --ion-color-warning-tint: #ffd346;
+
+  --ion-color-danger: #f24c58;
+  --ion-color-danger-rgb: 242, 76, 88;
+  --ion-color-danger-contrast: #000000;
+  --ion-color-danger-contrast-rgb: 0, 0, 0;
+  --ion-color-danger-shade: #d5434d;
+  --ion-color-danger-tint: #f35e69;
+
+  --ion-background-color-step-50: #0c122c;
+  --ion-background-color-step-100: #171e36;
+  --ion-background-color-step-150: #232941;
+  --ion-background-color-step-200: #2e344b;
+  --ion-background-color-step-250: #3a4055;
+  --ion-background-color-step-300: #454b5f;
+  --ion-background-color-step-350: #515669;
+  --ion-background-color-step-400: #5c6174;
+  --ion-background-color-step-450: #686d7e;
+  --ion-background-color-step-500: #747888;
+  --ion-background-color-step-550: #7f8392;
+  --ion-background-color-step-600: #8b8f9c;
+  --ion-background-color-step-650: #969aa7;
+  --ion-background-color-step-700: #a2a5b1;
+  --ion-background-color-step-750: #adb1bb;
+  --ion-background-color-step-800: #b9bcc5;
+  --ion-background-color-step-850: #c4c7cf;
+  --ion-background-color-step-900: #d0d2da;
+  --ion-background-color-step-950: #dbdee4;
+
+  --ion-text-color-step-50: #dbdee4;
+  --ion-text-color-step-100: #d0d2da;
+  --ion-text-color-step-150: #c4c7cf;
+  --ion-text-color-step-200: #b9bcc5;
+  --ion-text-color-step-250: #adb1bb;
+  --ion-text-color-step-300: #a2a5b1;
+  --ion-text-color-step-350: #969aa7;
+  --ion-text-color-step-400: #8b8f9c;
+  --ion-text-color-step-450: #7f8392;
+  --ion-text-color-step-500: #747888;
+  --ion-text-color-step-550: #686d7e;
+  --ion-text-color-step-600: #5c6174;
+  --ion-text-color-step-650: #515669;
+  --ion-text-color-step-700: #454b5f;
+  --ion-text-color-step-750: #3a4055;
+  --ion-text-color-step-800: #2e344b;
+  --ion-text-color-step-850: #232941;
+  --ion-text-color-step-900: #171e36;
+  --ion-text-color-step-950: #0c122c;
+
+  // Aliases have to be re-emitted here, not inherited -- see the mixin comment.
+  @include app-aliases;
+
+  // The shadow needs more reach on a dark ground to stay perceptible at all.
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.32);
 
   color-scheme: dark;
 }

@@ -1,0 +1,33 @@
+{
+  "name": "Pomodoro",
+  "short_name": "Pomodoro",
+  "description": "Temporizador pomodoro con ciclos de trabajo y descanso, presets y sonido de fondo.",
+  "lang": "es",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eef0f5",
+  "theme_color": "#eef0f5",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "assets/icon/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}

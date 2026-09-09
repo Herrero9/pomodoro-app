@@ -12,6 +12,14 @@ export interface PomodoroSettings {
   longBreakMinutes: number;
   sessionsBeforeLongBreak: number;
   soundVideoId: string;
+  /** Keep the clock running into a break when a work period ends. */
+  autoStartBreaks: boolean;
+  /** Keep the clock running into the next work period when a break ends. */
+  autoStartWork: boolean;
+  /** Play a chime (and vibrate, on device) when a phase ends. */
+  alertSound: boolean;
+  /** Raise a system notification when a phase ends. */
+  alertNotification: boolean;
 }
 
 /** A work or break period the user actually ran to completion. */
@@ -19,6 +27,8 @@ export interface CompletedPeriod {
   phase: PomodoroPhase;
   durationMinutes: number;
   completedAt: string;
+  /** What the user was working on, when they labelled the period. */
+  task?: string;
 }
 
 export const DEFAULT_SOUND_VIDEO_ID = 'jfKfPfyJRdk';
@@ -29,7 +39,19 @@ export const DEFAULT_SETTINGS: PomodoroSettings = {
   longBreakMinutes: 30,
   sessionsBeforeLongBreak: 4,
   soundVideoId: DEFAULT_SOUND_VIDEO_ID,
+  autoStartBreaks: true,
+  autoStartWork: true,
+  alertSound: true,
+  alertNotification: false,
 };
+
+/**
+ * How many completed periods are kept. The history is written to device
+ * storage on every phase change, so it cannot be allowed to grow without a
+ * bound; a few hundred entries is more than any "what did I do today" view
+ * needs and still serialises in well under a millisecond.
+ */
+export const HISTORY_LIMIT = 300;
 
 const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const YOUTUBE_HOSTNAMES = new Set([
@@ -83,6 +105,16 @@ export const PHASE_LABELS: Record<PomodoroPhase, string> = {
   work: 'Trabajo',
   shortBreak: 'Descanso corto',
   longBreak: 'Descanso largo',
+};
+
+/**
+ * Copy for the notification raised when a phase ends. Keyed by the phase that
+ * has just *finished*, which is what the user needs to be told about.
+ */
+export const PHASE_ALERTS: Record<PomodoroPhase, { title: string; body: string }> = {
+  work: { title: 'Periodo terminado', body: 'Levántate: toca descansar.' },
+  shortBreak: { title: 'Se acabó el descanso', body: 'De vuelta al foco.' },
+  longBreak: { title: 'Se acabó el descanso largo', body: 'Empieza un ciclo nuevo.' },
 };
 
 /**

@@ -31,13 +31,19 @@
 }
 
 .ring-bg {
-  stroke: var(--color-neutral-300);
+  stroke: var(--ion-background-color-step-100);
 }
 
 .ring-progress {
   stroke: var(--color-accent);
-  stroke-linecap: butt;
+  stroke-linecap: round; // Ionic rounds its progress ends; the ring follows
   transition: stroke-dashoffset 1s linear; // matches the 1s tick
+
+  // A reset, a skip or a phase change moves the arc all at once; easing that
+  // over a second would read as the ring lagging behind the button.
+  &--instant {
+    transition: none;
+  }
 }
 
 .ring-center {

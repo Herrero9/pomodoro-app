@@ -1,15 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <span class="eyebrow" slot="start">Pomodoro</span>
+    <ion-title>Pomodoro</ion-title>
+
     <ion-buttons slot="end">
-      <span class="eyebrow cycle-label">
+      <!-- The cycle counter is metadata, not an action, so it rides in the
+           button slot as a chip rather than as another button. -->
+      <ion-chip outline="true" class="cycle-chip">
         <span class="run-dot" [class.running]="timer.isRunning()"></span>
-        Ciclo {{ timer.currentCycle() }}/{{ timer.settings().sessionsBeforeLongBreak }}
-      </span>
-      <ion-button
-        [attr.aria-label]="theme.isDark() ? 'Usar tema claro' : 'Usar tema oscuro'"
-        (click)="theme.setDark(!theme.isDark())"
-      >
+        <ion-label>
+          Ciclo {{ timer.currentCycle() }}/{{ timer.settings().sessionsBeforeLongBreak }}
+        </ion-label>
+      </ion-chip>
+
+      <!-- `id` rather than a click handler: the modal itself lives in
+           home.page.html, and Ionic's `trigger` wires the two together across
+           component boundaries. -->
+      <ion-button id="open-history" aria-label="Periodos realizados">
+        <ion-icon slot="icon-only" name="list-outline"></ion-icon>
+      </ion-button>
+
+      <!-- The label is static on purpose. Binding an `aria-*` attribute on an
+           Ionic component throws: its `attributeChangedCallback` reaches for a
+           lazy instance that does not exist yet when Angular writes the
+           attribute during the first render, and the exception aborts that
+           render -- which is what left the whole page half-hydrated, with
+           Ionic's vdom and its icon URLs broken. A button's name should
+           describe what it does anyway, not what state it is in; the icon
+           carries the state. -->
+      <ion-button aria-label="Cambiar tema" (click)="theme.setDark(!theme.isDark())">
         <ion-icon
           slot="icon-only"
           [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"
@@ -20,5 +38,4 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <hr class="hr" />
 </ion-header>

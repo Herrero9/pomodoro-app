@@ -11,21 +11,42 @@
   min-width: var(--sidebar-min-width);
   display: flex;
   flex-direction: column;
-  border-left: var(--rule-thick) solid var(--color-divider);
-  background: var(--color-surface);
+  gap: var(--space-3);
+
+  // The blocks are cards now, so the sidebar itself is just the page ground
+  // they sit on -- the tinted fill that used to back it would fight their
+  // elevation. The hairline stays: it is the only thing marking where the
+  // main panel ends, and it is what ion-split-pane draws in the same spot.
+  padding: var(--space-4);
+  border-left: var(--rule-hairline) solid var(--color-divider);
 }
 
 .side-status {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border-bottom: var(--rule-thick) solid var(--color-divider);
+  align-self: flex-start;
+  margin: 0;
+  --color: var(--color-text-muted);
+
+  .run-dot {
+    margin-inline-end: 7px;
+  }
+
+  ion-label {
+    font-size: var(--font-size-eyebrow);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
 }
 
-.side-block {
-  padding: var(--space-4);
-  border-bottom: var(--rule-hairline) solid var(--color-divider);
+.side-card {
+  flex: none;
+}
+
+.side-block-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
 }
 
 // Absorbs the leftover height so the video grows with the window.
@@ -36,89 +57,28 @@
   flex-direction: column;
 }
 
-.side-block-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: var(--space-2);
-
-  .accent {
-    color: var(--color-accent);
-  }
-}
-
-.sound-frame {
-  position: relative;
+.sound-content {
   flex: 1;
-  min-height: 120px;
-  background: var(--color-neutral-300);
-  border: var(--rule-hairline) solid var(--color-divider);
-
-  iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-}
-
-.preset-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
-}
-
-.preset-card {
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: var(--space-2) var(--space-3);
-  border: var(--rule-hairline) solid var(--color-divider);
-  background: transparent;
-  color: var(--color-text);
-  font-family: var(--font-body);
-  text-align: left;
-  cursor: pointer;
-
-  &.active {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-bg);
-  }
 }
 
-.preset-name-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: var(--font-size-sm);
-  font-weight: var(--weight-bold);
-}
-
-.preset-key {
-  font-size: 9.5px;
-  opacity: 0.6;
-}
-
-.preset-spec {
-  font-size: var(--font-size-eyebrow);
-  opacity: 0.7;
+app-preset-grid {
+  display: block;
 }
 
 // Pinned to the bottom of the sidebar.
 .side-cycle {
-  border-bottom: none;
   margin-top: auto;
-  border-top: var(--rule-thick) solid var(--color-divider);
-
-  app-progress-dots {
-    margin-top: var(--space-6);
-  }
 }
 
 .cycle-footer {
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
   color: var(--color-text-muted);
+}
+
+.cycle-today {
+  margin-top: var(--space-1);
+  color: var(--color-text-subtle);
 }

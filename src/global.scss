@@ -4,9 +4,13 @@
  * Three things only:
  *   1. Ionic's own base stylesheets.
  *   2. A handful of utility classes reused across pages (.eyebrow, .hr...).
- *   3. Ionic component defaults remapped onto the design tokens.
- * Anything specific to one screen belongs in that component's stylesheet, and
- * every value below should come from a token in theme/variables.scss.
+ *   3. Ionic component defaults nudged onto the design tokens.
+ *
+ * Section 3 is deliberately thin. The palette in theme/variables.scss already
+ * speaks Ionic's language (semantic colours plus the `--ion-*-color-step-*`
+ * ramps), so native components pick up the app's hues on their own and the
+ * only overrides left here are shape ones -- radii and elevation. Anything
+ * specific to one screen belongs in that component's stylesheet.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -58,14 +62,14 @@ h1, h2, h3, h4, h5, h6 {
 /** Uppercase micro-label used for section headings and metadata. */
 .eyebrow {
   font-size: var(--font-size-eyebrow);
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 
-/** Full-width rule; `.divider-tight` sits closer to the block above it. */
+/** Hairline rule. `.divider-tight` sits closer to the block above it. */
 .hr {
-  height: var(--rule-thick);
+  height: var(--rule-hairline);
   border: 0;
   margin: 0;
   background: var(--color-divider);
@@ -73,6 +77,22 @@ h1, h2, h3, h4, h5, h6 {
   &.divider-tight {
     margin-top: var(--space-4);
   }
+}
+
+/**
+ * Visible to assistive technology, invisible on screen. Used for the live
+ * region that announces phase changes.
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 /** Small dot that pulses while the timer is running. */
@@ -93,56 +113,66 @@ h1, h2, h3, h4, h5, h6 {
   50% { opacity: 0.3; }
 }
 
+/**
+ * The app's motion is all ambient -- a pulsing dot, a ring easing round, a
+ * ripple. None of it carries meaning that the static state does not, so under
+ * a reduced-motion preference it simply stops.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .run-dot.running {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Ionic component defaults ──────────────────────────────────────────────
-   Remapped onto the design tokens so components never restyle them locally. */
+   Shape only: the palette reaches these components through the Ionic
+   variables, so nothing here needs to restate a colour. */
 
-ion-content {
-  --background: var(--color-bg);
-  --color: var(--color-text);
+ion-card {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  margin: 0;
 }
 
-ion-header ion-toolbar:first-of-type {
-  --border-width: 0;
-  --box-shadow: none;
+ion-card-header {
+  padding-bottom: var(--space-2);
 }
 
-ion-toolbar {
-  --background: var(--color-bg);
-  --color: var(--color-text);
+ion-card-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--weight-semibold);
+}
+
+/* Inset lists are Ionic's own card-shaped list; match the card radius and
+   elevation. Their margin is left to Ionic -- it is what insets them from the
+   screen edge on a page that has no padding of its own. */
+ion-list.list-inset {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
 }
 
 ion-button {
   --border-radius: var(--radius);
   --box-shadow: none;
-  text-transform: uppercase;
-  font-weight: var(--weight-bold);
-  letter-spacing: 0.02em;
   font-size: var(--font-size-control);
+  font-weight: var(--weight-semibold);
 }
 
-ion-item {
-  --background: var(--color-bg);
-  --border-color: var(--color-divider);
-  --color: var(--color-text);
-  --padding-start: 0;
-  --inner-padding-end: 0;
-}
-
-ion-list {
-  background: transparent;
-}
-
-ion-list-header {
-  --color: var(--color-text);
+ion-chip {
+  --background: var(--ion-background-color-step-100);
+  font-size: var(--font-size-eyebrow);
+  font-weight: var(--weight-semibold);
 }
 
 ion-input {
-  --background: var(--color-surface);
-  --color: var(--color-text);
-  --padding-start: 10px !important;
-  --padding-end: 10px !important;
-}
-
-ion-toggle {
-  --track-background-checked: var(--color-accent);
+  --border-radius: var(--radius-sm);
 }

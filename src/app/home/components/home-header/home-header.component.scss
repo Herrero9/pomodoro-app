@@ -2,16 +2,32 @@
   display: contents;
 }
 
-ion-toolbar {
-  .eyebrow {
-    font-weight: var(--weight-bold);
+ion-title {
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
+}
+
+.cycle-chip {
+  // Chips ship with a comfortable list-row height; inside a toolbar it has to
+  // line up with the icon buttons next to it instead.
+  height: 30px;
+  margin-inline-end: var(--space-2);
+  --color: var(--color-text-muted);
+
+  .run-dot {
+    margin-inline-end: 7px;
   }
 
-  .cycle-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--color-text-muted);
-    margin-right: var(--space-2);
+  ion-label {
+    font-size: var(--font-size-eyebrow);
+    font-weight: var(--weight-semibold);
+  }
+}
+
+// On a phone the toolbar now carries three icon buttons, and the chip is the
+// one piece of it the compact layout repeats further down the screen.
+@media (max-width: 380px) {
+  .cycle-chip {
+    display: none;
   }
 }

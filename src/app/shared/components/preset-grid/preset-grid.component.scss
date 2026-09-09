@@ -1,0 +1,58 @@
+:host {
+  display: block;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+// A tile rather than a bordered box: filled surface, rounded, with the Ionic
+// ripple on press. `position: relative` + `overflow: hidden` is what
+// <ion-ripple-effect> needs to clip itself to the tile.
+.preset-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3);
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--ion-background-color-step-50);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &.active {
+    background: var(--color-accent);
+    color: var(--ion-color-primary-contrast);
+  }
+}
+
+.preset-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.preset-key {
+  font-size: var(--font-size-key);
+  opacity: 0.6;
+}
+
+.preset-spec {
+  font-size: var(--font-size-eyebrow);
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preset-card {
+    transition: none;
+  }
+}

@@ -1,23 +1,48 @@
-<ion-list>
+<div class="today-summary">
+  <span class="eyebrow">Hoy</span>
+  <strong class="tabular-nums">
+    {{ timer.workPeriodsToday() }} periodos · {{ timer.focusMinutesToday() }} min de foco
+  </strong>
+</div>
+
+<!-- `inset` is Ionic's own card-shaped list, so the history matches the cards
+     on the timer screen behind it. -->
+<ion-list [inset]="true" lines="full">
   <ion-list-header>
-    <span class="eyebrow">Periodos realizados</span>
+    <ion-label class="eyebrow">Periodos realizados</ion-label>
   </ion-list-header>
 
   @for (period of timer.completedPeriods(); track period.completedAt) {
-    <ion-item lines="full">
+    <ion-item>
       <ion-icon
         slot="start"
+        color="primary"
         [name]="period.phase === 'work' ? 'briefcase-outline' : 'cafe-outline'"
       ></ion-icon>
-      <ion-label>
-        <h2>{{ phaseLabels[period.phase] }}</h2>
-        <p>{{ period.durationMinutes }} min</p>
+      <ion-label class="ion-text-wrap">
+        <h2>{{ period.task || phaseLabels[period.phase] }}</h2>
+        <p>{{ phaseLabels[period.phase] }} · {{ period.durationMinutes }} min</p>
       </ion-label>
       <ion-note slot="end" class="tabular-nums">{{ period.completedAt | date: 'HH:mm' }}</ion-note>
     </ion-item>
   } @empty {
-    <ion-item lines="full">
+    <ion-item lines="none">
       <ion-label class="ion-text-center" color="medium">Aún no hay periodos completados</ion-label>
     </ion-item>
   }
 </ion-list>
+
+@if (timer.completedPeriods().length) {
+  <div class="history-actions">
+    <ion-button id="clear-history" fill="clear" color="danger" size="small">
+      Vaciar historial
+    </ion-button>
+  </div>
+
+  <ion-alert
+    trigger="clear-history"
+    header="¿Vaciar el historial?"
+    message="Se borran todos los periodos guardados. No se puede deshacer."
+    [buttons]="clearButtons"
+  ></ion-alert>
+}

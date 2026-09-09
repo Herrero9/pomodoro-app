@@ -1,13 +1,14 @@
 :host {
   display: flex;
   align-items: center;
-  gap: var(--dot-size); // square rhythm: gap matches the dot height
+  gap: var(--dot-size); // gap matches the segment height
 }
 
 .dot {
   flex: 1;
   height: var(--dot-size);
-  background: var(--color-neutral-300);
+  border-radius: var(--radius-pill);
+  background: var(--ion-background-color-step-100);
 
   &.filled {
     background: var(--color-accent);

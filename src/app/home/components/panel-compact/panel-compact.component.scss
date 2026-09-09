@@ -1,29 +1,51 @@
+// A stack of cards now rather than a single one, so the gap between them is
+// the host's job.
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .timer-wrap {
   display: flex;
   flex-direction: column;
-  padding: var(--space-4) 0 var(--space-6);
+  padding: var(--space-4);
 }
 
-.phase-label {
-  font-size: var(--font-size-key);
-  letter-spacing: var(--tracking-wide);
-  color: var(--color-accent);
+.phase-badge {
+  align-self: flex-start;
+  border-radius: var(--radius-pill);
+  padding: 5px 10px;
+  font-size: var(--font-size-eyebrow);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
 }
 
 .headline {
-  margin: var(--space-1) 0 0;
+  margin: var(--space-3) 0 0;
   font-size: var(--font-size-lg);
-  line-height: 1.1;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.compact-task {
+  margin-top: var(--space-3);
+}
+
+.compact-block-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
 }
 
 .time {
   font-size: 56px;
   font-weight: var(--weight-bold);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
@@ -39,4 +61,11 @@ app-progress-dots {
   color: var(--color-text-subtle);
   padding-left: var(--space-2);
   white-space: nowrap;
+}
+
+// What the break overlay would otherwise be the first to tell you.
+.next-up {
+  margin: var(--space-4) 0 0;
+  text-align: center;
+  color: var(--color-text-subtle);
 }

@@ -1,75 +1,32 @@
-ion-toolbar .eyebrow {
-  font-weight: var(--weight-bold);
+ion-list-header {
+  --color: var(--color-text-muted);
+  min-height: 40px;
 }
 
-.section-label {
-  color: var(--color-accent);
-  margin: var(--space-4) 0 var(--space-2);
+// Matches the inset lists' own horizontal margin so the button lines up with
+// the cards above it.
+.save-row {
+  padding: var(--space-2) var(--space-4) var(--space-4);
 }
 
-.save-btn {
-  margin-top: var(--space-4);
-}
-
-// The whole row is a button; strip the native chrome and keep only the rule
-// underneath it.
-.toggle-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  width: 100%;
-  padding: var(--space-4) 0;
-  border: 0;
-  border-bottom: var(--rule-hairline) solid var(--color-divider);
-  background: transparent;
-  color: inherit;
-  font-family: var(--font-body);
-  text-align: left;
-  cursor: pointer;
-}
-
+// Ionic's own two-line item label: h3 is the row title, p the hint under it.
 .toggle-copy {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.toggle-title {
-  font-size: var(--font-size-control);
-  font-weight: 600;
-}
-
-.toggle-hint {
-  font-size: var(--font-size-eyebrow);
-  color: var(--color-text-subtle);
-}
-
-// Square switch: the knob is pushed to one end with justify-content.
-.switch {
-  width: 44px;
-  height: 24px;
-  flex: none;
-  background: transparent;
-  border: var(--rule-thick) solid var(--color-divider);
-  display: flex;
-  justify-content: flex-start;
-  padding: 2px;
-  transition: background-color 0.15s, border-color 0.15s;
-
-  &.on {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    justify-content: flex-end;
+  h3 {
+    margin: 0;
+    font-size: var(--font-size-control);
+    font-weight: var(--weight-medium);
   }
-}
 
-.knob {
-  width: 16px;
-  height: 16px;
-  background: var(--color-neutral-500);
+  p {
+    margin: 2px 0 0;
+    font-size: var(--font-size-eyebrow);
+    line-height: 1.4;
+    color: var(--color-text-subtle);
+  }
 
-  .switch.on & {
-    background: var(--color-bg);
+  // Why a toggle refused to switch on. Loud enough to notice, quiet enough
+  // not to read as an app error.
+  p.warn {
+    color: var(--ion-color-danger);
   }
 }

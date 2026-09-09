@@ -1,9 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, inject } from '@angular/core';
 import { TimerService } from '../../../services/timer.service';
-import { DEFAULT_SOUND_VIDEO_ID, PRESETS, extractYouTubeId } from '../../../models/pomodoro.model';
 
-/** Right-hand sidebar of the desktop layout: sound, presets and cycle progress. */
+/**
+ * Right-hand sidebar of the desktop layout. It composes shared blocks (sound,
+ * presets, cycle progress) rather than owning them, because the compact layout
+ * shows the same ones.
+ */
 @Component({
   selector: 'app-panel-side',
   templateUrl: './panel-side.component.html',
@@ -11,30 +13,5 @@ import { DEFAULT_SOUND_VIDEO_ID, PRESETS, extractYouTubeId } from '../../../mode
   standalone: false,
 })
 export class PanelSideComponent {
-  readonly presets = PRESETS;
-
   readonly timer = inject(TimerService);
-  private readonly sanitizer = inject(DomSanitizer);
-
-  /**
-   * Embed URL for the background-sound video, falling back to the default one
-   * when the stored setting is not a usable YouTube reference. Trusting the URL
-   * is safe because it is assembled here from an ID that `extractYouTubeId`
-   * already validated against a strict pattern.
-   */
-  readonly soundUrl = computed<SafeResourceUrl>(() => {
-    const id = extractYouTubeId(this.timer.settings().soundVideoId) ?? DEFAULT_SOUND_VIDEO_ID;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube-nocookie.com/embed/${id}?rel=0`
-    );
-  });
-
-  /** Name of the preset matching the current durations, or null for a custom setup. */
-  readonly activePresetName = computed(() => {
-    const settings = this.timer.settings();
-    const match = this.presets.find(
-      (p) => p.workMinutes === settings.workMinutes && p.breakMinutes === settings.shortBreakMinutes
-    );
-    return match?.name ?? null;
-  });
 }

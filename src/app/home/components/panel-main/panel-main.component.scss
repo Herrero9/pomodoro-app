@@ -28,12 +28,19 @@
 .panel-title {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(16px, 3.4cqi, 56px);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-eyebrow);
-  line-height: 1.15;
-  text-transform: uppercase;
+  font-size: clamp(16px, 3.2cqi, 52px);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--color-text-muted);
   text-wrap: balance;
+}
+
+// The task label reads as a continuation of the title, so it keeps the title's
+// width rather than spanning the whole panel.
+.panel-task {
+  max-width: 32rem;
+  margin-top: var(--space-2);
 }
 
 .panel-row {
@@ -55,8 +62,8 @@
 .big-time {
   font-size: clamp(80px, min(19cqi, 26vh), 380px);
   font-weight: var(--weight-bold);
-  letter-spacing: -0.05em;
-  line-height: 0.85;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
 }
 
 .panel-headline {
@@ -84,17 +91,19 @@
   font-size: var(--font-size-eyebrow);
   color: var(--color-text-muted);
 
-  // Keycap.
+  // Keycap: a filled, rounded chip off the background ramp rather than an
+  // outlined square, so it reads like the rest of the Ionic surfaces.
   .key {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 22px;
-    padding: 3px 6px;
-    border: var(--rule-hairline) solid var(--color-divider);
+    min-width: 24px;
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+    background: var(--ion-background-color-step-100);
     font-size: var(--font-size-key);
-    font-weight: var(--weight-bold);
-    letter-spacing: 0.06em;
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.04em;
     color: var(--color-text);
   }
 }

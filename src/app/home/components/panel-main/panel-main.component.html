@@ -2,6 +2,8 @@
   <div class="panel-center">
     <h1 class="panel-title">{{ sessionTitle }}</h1>
 
+    <app-task-input class="panel-task"></app-task-input>
+
     <div class="panel-row">
       <app-progress-ring variant="panel" [progress]="timer.progress()">
         <span class="eyebrow ring-pct">{{ timer.progress() * 100 | number: '1.0-0' }}%</span>

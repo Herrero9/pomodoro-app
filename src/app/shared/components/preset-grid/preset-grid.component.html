@@ -1,0 +1,17 @@
+<div class="preset-grid">
+  @for (preset of presets; track preset.key) {
+    <button
+      type="button"
+      class="preset-card ion-activatable"
+      [class.active]="activePresetName() === preset.name"
+      [attr.aria-pressed]="activePresetName() === preset.name"
+      (click)="timer.applyPreset(preset)"
+    >
+      <span class="preset-name-row">
+        <span class="preset-key">{{ preset.key }}</span>{{ preset.name }}
+      </span>
+      <span class="preset-spec">{{ preset.spec }}</span>
+      <ion-ripple-effect></ion-ripple-effect>
+    </button>
+  }
+</div>

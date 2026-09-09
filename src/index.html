@@ -1,29 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="utf-8" />
-  <title>Ionic App</title>
+  <title>Pomodoro</title>
+  <meta name="description" content="Temporizador pomodoro con ciclos de trabajo y descanso, presets y sonido de fondo." />
 
   <base href="/" />
 
   <meta name="color-scheme" content="light dark" />
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- `user-scalable=no` used to be here (the Ionic starter default). Pinch
+       zoom is an accessibility feature, and nothing in this app breaks when
+       the page is zoomed, so it stays available. -->
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
 
-  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+  <!-- Browser chrome follows the app's own two grounds, so the status bar on a
+       phone matches the theme instead of sitting in stock white. -->
+  <meta name="theme-color" content="#eef0f5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#000722" media="(prefers-color-scheme: dark)" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon/icon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon/icon.svg" />
+  <link rel="manifest" href="manifest.webmanifest" />
 
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Pomodoro" />
 </head>
 
 <body>

@@ -13,16 +13,19 @@ ion-button {
   --padding-end: var(--control-padding-x);
 }
 
-// Takes whatever width the two secondary buttons leave.
+// Takes whatever width the two secondary buttons leave. It carries the only
+// solid fill in the row, which is what marks it as the primary action.
 .btn-run {
   flex: 1;
+  --box-shadow: var(--shadow-1);
 
   &::part(native) {
     justify-content: flex-start;
   }
 }
 
+// Outline buttons default to the primary colour in Ionic, which would make
+// them compete with the run button; medium keeps them recessive.
 .btn-secondary {
-  --border-color: var(--color-divider);
-  --color: var(--color-text);
+  --border-width: var(--rule-hairline);
 }

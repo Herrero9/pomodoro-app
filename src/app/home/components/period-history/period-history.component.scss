@@ -1,3 +1,33 @@
 :host {
   display: block;
 }
+
+// Reads as the answer to "how has today gone", so it sits above the list
+// rather than inside it, on the page ground.
+.today-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-4) 0;
+
+  .eyebrow {
+    color: var(--color-text-subtle);
+  }
+
+  strong {
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.02em;
+  }
+}
+
+ion-list-header {
+  --color: var(--color-text-muted);
+  min-height: 40px;
+}
+
+.history-actions {
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-4) var(--space-6);
+}

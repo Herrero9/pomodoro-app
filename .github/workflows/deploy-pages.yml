@@ -31,6 +31,11 @@ jobs:
 
       - run: touch www/.nojekyll
 
+      # GitHub Pages sirve ficheros estaticos: una ruta del router (/home) no
+      # existe en disco. Publicando index.html tambien como 404.html, Pages lo
+      # devuelve para cualquier ruta desconocida y Angular resuelve la URL.
+      - run: cp www/index.html www/404.html
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: www

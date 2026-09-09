@@ -3,6 +3,7 @@
     <circle class="ring-bg" cx="100" cy="100" [attr.r]="radius" />
     <circle
       class="ring-progress"
+      [class.ring-progress--instant]="!animated()"
       cx="100"
       cy="100"
       [attr.r]="radius"

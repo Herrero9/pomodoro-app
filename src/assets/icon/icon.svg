@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- App mark: the countdown ring at three quarters, on the palette's light
+     ground. Vector rather than a set of PNGs, so one file covers every size a
+     launcher or a browser tab asks for. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pomodoro">
+  <rect width="512" height="512" rx="112" fill="#eef0f5"/>
+  <circle cx="256" cy="256" r="152" fill="none" stroke="#d5d9e4" stroke-width="40"/>
+  <circle cx="256" cy="256" r="152" fill="none" stroke="#2c3c63" stroke-width="40"
+          stroke-linecap="round" stroke-dasharray="955" stroke-dashoffset="239"
+          transform="rotate(-90 256 256)"/>
+  <rect x="238" y="150" width="36" height="120" rx="18" fill="#2c3c63"/>
+  <rect x="238" y="238" width="106" height="36" rx="18" fill="#2c3c63"/>
+</svg>

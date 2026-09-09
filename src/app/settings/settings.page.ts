@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
-import { extractYouTubeId, PomodoroSettings } from '../models/pomodoro.model';
+import { AlertService } from '../services/alert.service';
+import { DEFAULT_SETTINGS, extractYouTubeId, PomodoroSettings } from '../models/pomodoro.model';
 
 /**
  * Settings form. It edits a local copy of the settings and only commits it on
@@ -17,8 +18,16 @@ import { extractYouTubeId, PomodoroSettings } from '../models/pomodoro.model';
 export class SettingsPage implements OnInit {
   form: PomodoroSettings;
 
+  /**
+   * Set when the user asks for notifications and the browser refuses. The
+   * toggle goes back off, and this explains why -- silently ignoring the tap
+   * would look like a bug.
+   */
+  readonly notificationsBlocked = signal(false);
+
   readonly theme = inject(ThemeService);
   private readonly timer = inject(TimerService);
+  private readonly alerts = inject(AlertService);
   private readonly router = inject(Router);
 
   constructor() {
@@ -39,6 +48,7 @@ export class SettingsPage implements OnInit {
       extractYouTubeId(this.form.soundVideoId) ?? this.timer.settings().soundVideoId;
 
     await this.timer.updateSettings({
+      ...this.form,
       workMinutes: this.toPositiveInt(this.form.workMinutes),
       shortBreakMinutes: this.toPositiveInt(this.form.shortBreakMinutes),
       longBreakMinutes: this.toPositiveInt(this.form.longBreakMinutes),
@@ -46,6 +56,28 @@ export class SettingsPage implements OnInit {
       soundVideoId,
     });
     this.router.navigateByUrl('/home');
+  }
+
+  /** Puts every field back to the shipped defaults, still pending an explicit save. */
+  restoreDefaults(): void {
+    this.form = { ...DEFAULT_SETTINGS };
+    this.notificationsBlocked.set(false);
+  }
+
+  /**
+   * Notifications need the browser's permission, and the request has to come
+   * from a user gesture -- which is exactly this toggle. Turning them *off*
+   * never asks for anything.
+   */
+  async setNotifications(enabled: boolean): Promise<void> {
+    if (!enabled) {
+      this.form.alertNotification = false;
+      this.notificationsBlocked.set(false);
+      return;
+    }
+    const granted = await this.alerts.requestNotificationPermission();
+    this.form.alertNotification = granted;
+    this.notificationsBlocked.set(!granted);
   }
 
   toggleDark(): void {

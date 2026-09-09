@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Maskable variant: the same mark, pulled into the middle 60% so a launcher
+     can crop it to a circle or a squircle without clipping the ring. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pomodoro">
+  <rect width="512" height="512" fill="#eef0f5"/>
+  <g transform="translate(256 256) scale(0.62) translate(-256 -256)">
+    <circle cx="256" cy="256" r="152" fill="none" stroke="#d5d9e4" stroke-width="40"/>
+    <circle cx="256" cy="256" r="152" fill="none" stroke="#2c3c63" stroke-width="40"
+            stroke-linecap="round" stroke-dasharray="955" stroke-dashoffset="239"
+            transform="rotate(-90 256 256)"/>
+    <rect x="238" y="150" width="36" height="120" rx="18" fill="#2c3c63"/>
+    <rect x="238" y="238" width="106" height="36" rx="18" fill="#2c3c63"/>
+  </g>
+</svg>

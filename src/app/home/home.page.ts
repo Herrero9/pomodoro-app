@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, computed, inject } from '@angular/core';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
 import { PRESETS } from '../models/pomodoro.model';
@@ -19,6 +19,16 @@ const EDITABLE_TAGS = ['INPUT', 'TEXTAREA'];
 })
 export class HomePage {
   readonly timer = inject(TimerService);
+
+  /**
+   * The one line a screen reader is told when something changes. Phase and
+   * running state only: the seconds are deliberately left out, since a live
+   * region that updates every tick drowns out everything else on the page.
+   */
+  readonly liveStatus = computed(
+    () => `${this.timer.phaseLabel()}. ${this.timer.isRunning() ? 'En marcha' : 'En pausa'}.`
+  );
+
   private readonly theme = inject(ThemeService);
 
   @HostListener('document:keydown', ['$event'])

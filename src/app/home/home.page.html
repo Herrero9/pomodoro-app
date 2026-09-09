@@ -1,6 +1,10 @@
-<app-home-header></app-home-header>
+<!-- While the break overlay is up it is the only thing on screen, so the UI
+     behind it leaves the tab order and the accessibility tree entirely. The
+     attribute goes on the header and the content rather than on a wrapper:
+     ion-content has to stay a direct child of the page to size itself. -->
+<app-home-header [attr.inert]="timer.isBreak() ? '' : null"></app-home-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" [attr.inert]="timer.isBreak() ? '' : null">
   <!-- Both layouts are always in the DOM; home.page.scss shows exactly one of
        them depending on the viewport width. -->
   <div class="layout-compact ion-padding">
@@ -13,6 +17,28 @@
   </div>
 </ion-content>
 
+<!-- The countdown itself is never announced -- a screen reader reading out
+     every second would be unusable. What matters is the phase changing under
+     you, which is exactly what this says. -->
+<p class="sr-only" role="status" aria-live="polite">{{ liveStatus() }}</p>
+
 @if (timer.isBreak()) {
   <app-break-overlay></app-break-overlay>
 }
+
+<!-- Opened from the toolbar button in app-home-header; `trigger` matches its id. -->
+<ion-modal trigger="open-history" #historyModal>
+  <ng-template>
+    <ion-header [translucent]="true">
+      <ion-toolbar>
+        <ion-title>Periodos</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="historyModal.dismiss()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <app-period-history></app-period-history>
+    </ion-content>
+  </ng-template>
+</ion-modal>

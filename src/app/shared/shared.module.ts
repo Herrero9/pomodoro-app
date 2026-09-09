@@ -6,12 +6,23 @@ import { MmssPipe } from './pipes/mmss.pipe';
 import { ProgressRingComponent } from './components/progress-ring/progress-ring.component';
 import { ProgressDotsComponent } from './components/progress-dots/progress-dots.component';
 import { TimerControlsComponent } from './components/timer-controls/timer-controls.component';
+import { PresetGridComponent } from './components/preset-grid/preset-grid.component';
+import { SoundPlayerComponent } from './components/sound-player/sound-player.component';
+import { TaskInputComponent } from './components/task-input/task-input.component';
 
 /**
  * Presentational pieces reused across layouts. They read `TimerService`
  * themselves or take plain inputs, so they carry no page-specific wiring.
  */
-const EXPORTED = [MmssPipe, ProgressRingComponent, ProgressDotsComponent, TimerControlsComponent];
+const EXPORTED = [
+  MmssPipe,
+  ProgressRingComponent,
+  ProgressDotsComponent,
+  TimerControlsComponent,
+  PresetGridComponent,
+  SoundPlayerComponent,
+  TaskInputComponent,
+];
 
 @NgModule({
   imports: [CommonModule, IonicModule],

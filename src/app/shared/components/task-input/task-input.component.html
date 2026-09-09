@@ -1,0 +1,11 @@
+<ion-item lines="none" class="task-item">
+  <ion-input
+    label="¿En qué estás trabajando?"
+    labelPlacement="stacked"
+    placeholder="Sin etiquetar"
+    enterkeyhint="done"
+    maxlength="80"
+    [value]="timer.task()"
+    (ionChange)="commit($any($event).detail.value)"
+  ></ion-input>
+</ion-item>

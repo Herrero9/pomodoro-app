@@ -3,16 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <span class="eyebrow">Ajustes</span>
+    <ion-title>Ajustes</ion-title>
   </ion-toolbar>
-  <hr class="hr" />
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<!-- Inset lists carry their own margins, so the content is not padded: an
+     `ion-padding` here would stack on top of them. -->
+<ion-content [fullscreen]="true">
   <form (ngSubmit)="save()">
-    <div class="eyebrow section-label">Duraciones</div>
+    <ion-list [inset]="true">
+      <ion-list-header>
+        <ion-label class="eyebrow">Duraciones</ion-label>
+      </ion-list-header>
 
-    <ion-list>
       <ion-item>
         <ion-input
           label="Duración del trabajo (min)"
@@ -58,9 +61,81 @@
       </ion-item>
     </ion-list>
 
-    <div class="eyebrow section-label">Sonido de fondo</div>
+    <ion-list [inset]="true">
+      <ion-list-header>
+        <ion-label class="eyebrow">Encadenado</ion-label>
+      </ion-list-header>
 
-    <ion-list>
+      <ion-item>
+        <ion-label class="ion-text-wrap toggle-copy">
+          <h3>Empezar el descanso solo</h3>
+          <p>Al acabar un periodo de trabajo, el descanso arranca sin tocar nada</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          aria-label="Empezar el descanso solo"
+          [(ngModel)]="form.autoStartBreaks"
+          name="autoStartBreaks"
+        ></ion-toggle>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label class="ion-text-wrap toggle-copy">
+          <h3>Volver al trabajo solo</h3>
+          <p>Al acabar un descanso, el siguiente periodo arranca sin tocar nada</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          aria-label="Volver al trabajo solo"
+          [(ngModel)]="form.autoStartWork"
+          name="autoStartWork"
+        ></ion-toggle>
+      </ion-item>
+    </ion-list>
+
+    <ion-list [inset]="true">
+      <ion-list-header>
+        <ion-label class="eyebrow">Avisos</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <ion-label class="ion-text-wrap toggle-copy">
+          <h3>Sonido al terminar</h3>
+          <p>Un tono corto (y vibración en el móvil) cada vez que acaba un periodo</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          aria-label="Sonido al terminar"
+          [(ngModel)]="form.alertSound"
+          name="alertSound"
+        ></ion-toggle>
+      </ion-item>
+
+      <!-- ngModel is deliberately not two-way here: enabling this needs the
+           browser's permission, so the value is written back by the handler
+           only once the answer is in. -->
+      <ion-item lines="none">
+        <ion-label class="ion-text-wrap toggle-copy">
+          <h3>Notificación del sistema</h3>
+          <p>Avisa aunque la app esté en otra pestaña o detrás de otra ventana</p>
+          @if (notificationsBlocked()) {
+            <p class="warn">El navegador ha bloqueado las notificaciones de esta página.</p>
+          }
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          aria-label="Notificación del sistema"
+          [checked]="form.alertNotification"
+          (ionChange)="setNotifications($any($event).detail.checked)"
+        ></ion-toggle>
+      </ion-item>
+    </ion-list>
+
+    <ion-list [inset]="true">
+      <ion-list-header>
+        <ion-label class="eyebrow">Sonido de fondo</ion-label>
+      </ion-list-header>
+
       <ion-item lines="none">
         <ion-input
           label="Vídeo de YouTube"
@@ -72,22 +147,36 @@
       </ion-item>
     </ion-list>
 
-    <ion-button expand="block" type="submit" class="save-btn">Guardar</ion-button>
+    <div class="save-row">
+      <ion-button expand="block" type="submit">Guardar</ion-button>
+      <ion-button expand="block" fill="clear" color="medium" type="button" (click)="restoreDefaults()">
+        Restablecer valores por defecto
+      </ion-button>
+    </div>
   </form>
 
-  <hr class="hr" />
+  <ion-list [inset]="true">
+    <ion-list-header>
+      <ion-label class="eyebrow">Apariencia</ion-label>
+    </ion-list-header>
 
-  <div class="eyebrow section-label">Apariencia</div>
-
-  <!-- A real button so the row is reachable with the keyboard; the switch
-       below it is purely decorative. -->
-  <button type="button" class="toggle-row" [attr.aria-pressed]="theme.isDark()" (click)="toggleDark()">
-    <span class="toggle-copy">
-      <span class="toggle-title">Tema oscuro</span>
-      <span class="toggle-hint">Invierte los colores para usarlo por la noche</span>
-    </span>
-    <span class="switch" [class.on]="theme.isDark()" aria-hidden="true">
-      <span class="knob"></span>
-    </span>
-  </button>
+    <!-- ion-toggle is the accessible control itself now: it owns the keyboard
+         handling and the pressed state that the hand-rolled row used to
+         reimplement. `ionChange` only fires on user interaction, so binding
+         `checked` back to the signal cannot loop. The copy lives in an
+         ion-label rather than in the toggle's own label slot, which clips to
+         a single line. -->
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap toggle-copy">
+        <h3>Tema oscuro</h3>
+        <p>Invierte los colores para usarlo por la noche</p>
+      </ion-label>
+      <ion-toggle
+        slot="end"
+        aria-label="Tema oscuro"
+        [checked]="theme.isDark()"
+        (ionChange)="toggleDark()"
+      ></ion-toggle>
+    </ion-item>
+  </ion-list>
 </ion-content>
