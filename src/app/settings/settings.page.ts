@@ -2,13 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
-import {
-  PomodoroSettings,
-  SOUND_SOURCES,
-  SOUND_SOURCE_LABELS,
-  extractSpotifyRef,
-  extractYouTubeId,
-} from '../models/pomodoro.model';
+import { extractYouTubeId, PomodoroSettings } from '../models/pomodoro.model';
 
 /**
  * Settings form. It edits a local copy of the settings and only commits it on
@@ -22,9 +16,6 @@ import {
 })
 export class SettingsPage implements OnInit {
   form: PomodoroSettings;
-
-  readonly soundSources = SOUND_SOURCES;
-  readonly soundSourceLabels = SOUND_SOURCE_LABELS;
 
   readonly theme = inject(ThemeService);
   private readonly timer = inject(TimerService);
@@ -42,18 +33,17 @@ export class SettingsPage implements OnInit {
   }
 
   async save(): Promise<void> {
-    // An unrecognised reference keeps the previously saved one rather than
-    // silently blanking that source's background sound.
-    const saved = this.timer.settings();
+    // An unrecognised video reference keeps the previously saved one rather
+    // than silently blanking the background sound.
+    const soundVideoId =
+      extractYouTubeId(this.form.soundVideoId) ?? this.timer.settings().soundVideoId;
 
     await this.timer.updateSettings({
       workMinutes: this.toPositiveInt(this.form.workMinutes),
       shortBreakMinutes: this.toPositiveInt(this.form.shortBreakMinutes),
       longBreakMinutes: this.toPositiveInt(this.form.longBreakMinutes),
       sessionsBeforeLongBreak: this.toPositiveInt(this.form.sessionsBeforeLongBreak),
-      soundSource: this.form.soundSource,
-      soundVideoId: extractYouTubeId(this.form.soundVideoId) ?? saved.soundVideoId,
-      soundSpotifyRef: extractSpotifyRef(this.form.soundSpotifyRef) ?? saved.soundSpotifyRef,
+      soundVideoId,
     });
     this.router.navigateByUrl('/home');
   }
