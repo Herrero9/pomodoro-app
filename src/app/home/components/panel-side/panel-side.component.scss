@@ -73,6 +73,37 @@ app-preset-grid {
   margin-top: auto;
 }
 
+// The session total is the headline of this card: the dots below it answer
+// "where am I in the cycle", this answers "how much have I actually done".
+.session-focus-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+
+  .eyebrow {
+    color: var(--color-text-subtle);
+  }
+}
+
+.session-reset {
+  margin: 0;
+  --padding-start: var(--space-2);
+  --padding-end: var(--space-2);
+  --color: var(--color-text-muted);
+  font-size: var(--font-size-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.session-focus-total {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--font-size-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
+}
+
 .cycle-footer {
   margin-top: var(--space-3);
   color: var(--color-text-muted);

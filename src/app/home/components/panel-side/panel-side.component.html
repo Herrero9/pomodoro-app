@@ -27,6 +27,23 @@
 
   <ion-card class="side-card side-cycle">
     <ion-card-content>
+      <div class="session-focus">
+        <div class="session-focus-head">
+          <span class="eyebrow">Foco en la sesión</span>
+          <ion-button
+            fill="clear"
+            size="small"
+            class="session-reset"
+            (click)="timer.resetSession()"
+          >
+            Reiniciar
+          </ion-button>
+        </div>
+        <strong class="tabular-nums session-focus-total">{{ timer.sessionFocusLabel() }}</strong>
+      </div>
+
+      <hr class="hr divider-tight" />
+
       <app-progress-dots></app-progress-dots>
       <div class="eyebrow cycle-footer">
         Ciclo {{ timer.currentCycle() }} · Luego: {{ timer.nextPhaseSummary() }}

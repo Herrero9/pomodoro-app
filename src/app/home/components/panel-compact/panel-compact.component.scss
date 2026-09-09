@@ -69,3 +69,12 @@ app-progress-dots {
   text-align: center;
   color: var(--color-text-subtle);
 }
+
+// The cumulative counterpart to the countdown above it: what the phone shows
+// instead of the sidebar's session card.
+.session-focus {
+  margin: var(--space-1) 0 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+}

@@ -10,6 +10,7 @@ import {
   PomodoroSettings,
   PHASE_LABELS,
   Preset,
+  formatFocusDuration,
   headlineFor,
 } from '../models/pomodoro.model';
 
@@ -35,6 +36,10 @@ interface PersistedState {
   /** Epoch ms at which the phase ends, `null` unless it was running. */
   deadline: number | null;
   task: string;
+  /** Focus seconds banked by the phases the session has already finished. */
+  sessionFocusSeconds: number;
+  /** Epoch ms the session started, so a stale one from another day starts over. */
+  sessionStartedAt: number;
 }
 
 /** Options for a phase transition; see `advancePhase`. */
@@ -64,6 +69,16 @@ export class TimerService implements OnDestroy {
 
   /** What the user says they are working on. Filed with every completed work period. */
   readonly task = signal<string>('');
+
+  /**
+   * Focus seconds banked by work phases the session has already left behind.
+   * The live total adds what the phase in progress has counted down so far, so
+   * this only ever moves at a phase boundary.
+   */
+  private readonly sessionFocusBanked = signal<number>(0);
+
+  /** Epoch ms the running session started. Used to drop a total left over from another day. */
+  private sessionStartedAt = Date.now();
 
   /**
    * Length of the phase in progress. A signal rather than a derivation of
@@ -126,6 +141,22 @@ export class TimerService implements OnDestroy {
   readonly focusMinutesToday = computed(() =>
     this.todaysWork().reduce((total, period) => total + period.durationMinutes, 0)
   );
+
+  /**
+   * Seconds of work counted down since the session began -- the periods it has
+   * already finished plus what the one in progress has run. Paused time is not
+   * in it: `secondsRemaining` only moves while the clock does. Unlike the "hoy"
+   * totals this includes work that was skipped or restarted, because that time
+   * was still spent focusing.
+   */
+  readonly sessionFocusSeconds = computed(() => {
+    const inProgress =
+      this.phase() === 'work' ? this.phaseDurationSeconds() - this.secondsRemaining() : 0;
+    return Math.max(0, this.sessionFocusBanked() + Math.max(0, inProgress));
+  });
+
+  /** "1 h 25 min" -- the session total as the UI shows it. */
+  readonly sessionFocusLabel = computed(() => formatFocusDuration(this.sessionFocusSeconds()));
 
   readonly headline = computed(() =>
     headlineFor(this.phase(), this.isRunning(), this.progress() > 0)
@@ -192,6 +223,9 @@ export class TimerService implements OnDestroy {
   reset(): void {
     this.isRunning.set(false);
     this.stopTicking();
+    // Restarting the period throws away its elapsed seconds, so bank them first
+    // -- they were focus time whether or not the period is seen through.
+    this.bankFocusFromCurrentPhase();
     const duration = this.durationFor(this.phase(), this.settings());
     this.phaseDurationSeconds.set(duration);
     this.secondsRemaining.set(duration);
@@ -238,6 +272,13 @@ export class TimerService implements OnDestroy {
     await this.persistState();
   }
 
+  /** Starts the session total over from zero, without touching the clock or the history. */
+  resetSession(): Promise<void> {
+    this.sessionFocusBanked.set(this.phase() === 'work' ? -this.elapsedInCurrentPhase() : 0);
+    this.sessionStartedAt = Date.now();
+    return this.persistState();
+  }
+
   /** Empties the completed-period history. */
   async clearHistory(): Promise<void> {
     this.completedPeriods.set([]);
@@ -268,6 +309,12 @@ export class TimerService implements OnDestroy {
     this.phase.set(state.phase);
     this.workPeriodsCompleted.set(state.workPeriodsCompleted);
     this.task.set(state.task ?? '');
+    // A total carried over from a previous day is not "this session" any more.
+    const sessionStartedAt = state.sessionStartedAt ?? Date.now();
+    if (isSameDay(sessionStartedAt, Date.now())) {
+      this.sessionStartedAt = sessionStartedAt;
+      this.sessionFocusBanked.set(state.sessionFocusSeconds ?? 0);
+    }
     this.phaseDurationSeconds.set(
       state.phaseTotalSeconds || this.durationFor(state.phase, resolved)
     );
@@ -373,6 +420,12 @@ export class TimerService implements OnDestroy {
     }
 
     if (finishedPhase === 'work') {
+      // A phase that ran out counts in full: on a replayed catch-up transition
+      // `secondsRemaining` still holds whatever was persisted before the app closed.
+      this.sessionFocusBanked.update(
+        (banked) =>
+          banked + (recordHistory ? this.phaseDurationSeconds() : this.elapsedInCurrentPhase())
+      );
       this.workPeriodsCompleted.update((count) => count + 1);
     } else if (finishedPhase === 'longBreak') {
       // A long break closes the cycle: start counting work periods again.
@@ -396,6 +449,20 @@ export class TimerService implements OnDestroy {
     void this.persistState();
   }
 
+  /** Seconds the phase in progress has counted down so far. */
+  private elapsedInCurrentPhase(): number {
+    return Math.max(0, this.phaseDurationSeconds() - this.secondsRemaining());
+  }
+
+  /** Moves the current work phase's elapsed seconds into the session total. */
+  private bankFocusFromCurrentPhase(): void {
+    if (this.phase() !== 'work') {
+      return;
+    }
+    const elapsed = this.elapsedInCurrentPhase();
+    this.sessionFocusBanked.update((banked) => banked + elapsed);
+  }
+
   private stopTicking(): void {
     this.tickSub?.unsubscribe();
     this.tickSub = undefined;
@@ -417,6 +484,8 @@ export class TimerService implements OnDestroy {
       isRunning: this.isRunning(),
       deadline: this.deadline,
       task: this.task(),
+      sessionFocusSeconds: this.sessionFocusBanked(),
+      sessionStartedAt: this.sessionStartedAt,
     };
     return this.storage.set(STATE_KEY, state);
   }
@@ -424,11 +493,16 @@ export class TimerService implements OnDestroy {
 
 /** Whether a completed period falls on the current calendar day. */
 function isToday(period: CompletedPeriod): boolean {
-  const completed = new Date(period.completedAt);
-  const now = new Date();
+  return isSameDay(new Date(period.completedAt).getTime(), Date.now());
+}
+
+/** Whether two instants fall on the same calendar day, in local time. */
+function isSameDay(a: number, b: number): boolean {
+  const left = new Date(a);
+  const right = new Date(b);
   return (
-    completed.getFullYear() === now.getFullYear() &&
-    completed.getMonth() === now.getMonth() &&
-    completed.getDate() === now.getDate()
+    left.getFullYear() === right.getFullYear() &&
+    left.getMonth() === right.getMonth() &&
+    left.getDate() === right.getDate()
   );
 }

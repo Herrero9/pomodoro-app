@@ -217,6 +217,65 @@ describe('TimerService', () => {
     expect(restored.focusMinutesToday()).toBe(25);
   });
 
+  it('accumulates focus time across the session', () => {
+    timer.start();
+    vi.advanceTimersByTime(90_000);
+
+    expect(timer.sessionFocusSeconds()).toBe(90);
+    expect(timer.sessionFocusLabel()).toBe('1 min');
+  });
+
+  it('does not count paused or break time towards the session total', () => {
+    timer.start();
+    vi.advanceTimersByTime(DEFAULT_SETTINGS.workMinutes * 60 * 1000);
+    vi.advanceTimersByTime(1); // deferred phase switch: now in a short break
+
+    const afterWork = timer.sessionFocusSeconds();
+    expect(afterWork).toBe(DEFAULT_SETTINGS.workMinutes * 60);
+
+    vi.advanceTimersByTime(60_000);
+    expect(timer.sessionFocusSeconds()).toBe(afterWork);
+
+    timer.pause();
+    vi.advanceTimersByTime(60_000);
+    expect(timer.sessionFocusSeconds()).toBe(afterWork);
+  });
+
+  it('keeps the focus time of a period that is skipped or restarted', () => {
+    timer.start();
+    vi.advanceTimersByTime(30_000);
+    timer.skip();
+    expect(timer.sessionFocusSeconds()).toBe(30);
+
+    timer.skip(); // back to work
+    timer.start();
+    vi.advanceTimersByTime(20_000);
+    timer.reset();
+
+    expect(timer.sessionFocusSeconds()).toBe(50);
+  });
+
+  it('starts the session total over on request', () => {
+    timer.start();
+    vi.advanceTimersByTime(45_000);
+    void timer.resetSession();
+
+    expect(timer.sessionFocusSeconds()).toBe(0);
+
+    vi.advanceTimersByTime(15_000);
+    expect(timer.sessionFocusSeconds()).toBe(15);
+  });
+
+  it('carries the session total across a reload', async () => {
+    timer.start();
+    vi.advanceTimersByTime(30_000);
+    timer.skip();
+    timer.pause();
+
+    const restored = await createTimer();
+    expect(restored.sessionFocusSeconds()).toBe(30);
+  });
+
   it('clears the history', async () => {
     timer.start();
     vi.advanceTimersByTime(DEFAULT_SETTINGS.workMinutes * 60 * 1000 + 1);

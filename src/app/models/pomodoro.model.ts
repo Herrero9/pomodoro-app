@@ -96,6 +96,21 @@ export function extractYouTubeId(input: string): string | null {
 }
 
 /**
+ * Human-readable length of a stretch of focus time, in Spanish. Rounded down to
+ * whole minutes so the sidebar total does not flicker every second -- the
+ * seconds are already on the ring, and this is the calmer, cumulative number.
+ */
+export function formatFocusDuration(seconds: number): string {
+  const totalMinutes = Math.floor(Math.max(0, seconds) / 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours === 0) {
+    return `${minutes} min`;
+  }
+  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
+}
+
+/**
  * Title of the desktop main panel. The break overlay covers the panel during a
  * break, so this only ever reads over a work phase.
  */

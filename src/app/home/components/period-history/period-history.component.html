@@ -3,6 +3,9 @@
   <strong class="tabular-nums">
     {{ timer.workPeriodsToday() }} periodos · {{ timer.focusMinutesToday() }} min de foco
   </strong>
+  <span class="session-line tabular-nums">
+    En esta sesión: {{ timer.sessionFocusLabel() }} de foco
+  </span>
 </div>
 
 <!-- `inset` is Ionic's own card-shaped list, so the history matches the cards

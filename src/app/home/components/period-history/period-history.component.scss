@@ -19,6 +19,11 @@
     font-weight: var(--weight-bold);
     letter-spacing: -0.02em;
   }
+
+  .session-line {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
 }
 
 ion-list-header {
