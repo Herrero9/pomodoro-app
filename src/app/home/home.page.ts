@@ -1,7 +1,6 @@
 import { Component, HostListener, computed, inject } from '@angular/core';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
-import { PRESETS } from '../models/pomodoro.model';
 
 /** Tags whose own key handling must win over the app-wide shortcuts. */
 const EDITABLE_TAGS = ['INPUT', 'TEXTAREA'];
@@ -56,8 +55,9 @@ export class HomePage {
         this.theme.setDark(!this.theme.isDark());
         break;
       default: {
-        // Digits 1-4 apply the matching preset.
-        const preset = PRESETS.find((p) => p.key === key);
+        // Digits apply the matching preset -- the shipped ones hold 1-4, the
+        // user's own are numbered on from there.
+        const preset = this.timer.presets().find((p) => p.key === key);
         if (preset) {
           this.timer.applyPreset(preset);
         }

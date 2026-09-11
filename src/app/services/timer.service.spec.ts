@@ -3,7 +3,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TimerService } from './timer.service';
 import { StorageService } from './storage.service';
-import { CompletedPeriod, DEFAULT_SETTINGS } from '../models/pomodoro.model';
+import {
+  BUILT_IN_PRESETS,
+  CompletedPeriod,
+  DEFAULT_SETTINGS,
+  MAX_CUSTOM_PRESETS,
+} from '../models/pomodoro.model';
 
 /**
  * In-memory stand-in for `@capacitor/preferences`, backed by a store that
@@ -121,6 +126,55 @@ describe('TimerService', () => {
     expect(timer.settings().workMinutes).toBe(50);
     expect(timer.settings().shortBreakMinutes).toBe(10);
     expect(timer.secondsRemaining()).toBe(50 * 60);
+  });
+
+  it('a preset the user adds joins the list with the next digit', async () => {
+    const created = await timer.addPreset({ name: 'Repaso', workMinutes: 20, breakMinutes: 3 });
+
+    expect(created).not.toBeNull();
+    const added = timer.presets().at(-1)!;
+    expect(added.name).toBe('Repaso');
+    expect(added.key).toBe('5');
+    expect(added.spec).toBe('20 / 3');
+    expect(added.id).toBe(created!.id);
+  });
+
+  it('an added preset clamps its durations and falls back to the spec for a name', async () => {
+    await timer.addPreset({ name: '   ', workMinutes: 0, breakMinutes: 2.6 });
+
+    const added = timer.presets().at(-1)!;
+    expect(added.workMinutes).toBe(1);
+    expect(added.breakMinutes).toBe(3);
+    expect(added.name).toBe('1 / 3');
+  });
+
+  it('presets the user added survive a reload, and a deleted one does not', async () => {
+    const created = await timer.addPreset({ name: 'Repaso', workMinutes: 20, breakMinutes: 3 });
+    await timer.addPreset({ name: 'Lectura', workMinutes: 35, breakMinutes: 7 });
+
+    let restored = await createTimer();
+    expect(restored.presets().map((p) => p.name)).toEqual([
+      ...BUILT_IN_PRESETS.map((p) => p.name),
+      'Repaso',
+      'Lectura',
+    ]);
+
+    await restored.deletePreset(created!.id);
+    restored = await createTimer();
+    const names = restored.presets().map((p) => p.name);
+    expect(names).not.toContain('Repaso');
+    // The one left moves up into the freed digit.
+    expect(restored.presets().at(-1)).toMatchObject({ name: 'Lectura', key: '5' });
+  });
+
+  it('stops adding presets once the list is full', async () => {
+    for (let i = 0; i < MAX_CUSTOM_PRESETS; i++) {
+      await timer.addPreset({ name: `P${i}`, workMinutes: 10 + i, breakMinutes: 2 });
+    }
+
+    expect(timer.canAddPreset()).toBe(false);
+    expect(await timer.addPreset({ name: 'Uno más', workMinutes: 5, breakMinutes: 1 })).toBeNull();
+    expect(timer.customPresets()).toHaveLength(MAX_CUSTOM_PRESETS);
   });
 
   it('a shorter preset mid-period leaves the running one alone', async () => {

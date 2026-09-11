@@ -1,16 +1,46 @@
 <div class="preset-grid">
-  @for (preset of presets; track preset.key) {
-    <button
-      type="button"
-      class="preset-card ion-activatable"
-      [class.active]="activePresetName() === preset.name"
-      [attr.aria-pressed]="activePresetName() === preset.name"
-      (click)="timer.applyPreset(preset)"
-    >
+  @for (preset of timer.presets(); track preset.id ?? preset.key) {
+    <!-- The delete control is a sibling of the tile, not a child: a button
+         inside a button is invalid, and the tile is the button. -->
+    <div class="preset-slot">
+      <button
+        type="button"
+        class="preset-card ion-activatable"
+        [class.active]="activePresetName() === preset.name"
+        [class.deletable]="preset.id"
+        [attr.aria-pressed]="activePresetName() === preset.name"
+        (click)="timer.applyPreset(preset)"
+      >
+        <span class="preset-name-row">
+          @if (preset.key) {
+            <span class="preset-key">{{ preset.key }}</span>
+          }
+          {{ preset.name }}
+        </span>
+        <span class="preset-spec">{{ preset.spec }}</span>
+        <ion-ripple-effect></ion-ripple-effect>
+      </button>
+
+      @if (preset.id) {
+        <button
+          type="button"
+          class="preset-delete"
+          [attr.aria-label]="'Borrar el preset ' + preset.name"
+          (click)="confirmDelete(preset)"
+        >
+          <ion-icon name="close" aria-hidden="true"></ion-icon>
+        </button>
+      }
+    </div>
+  }
+
+  @if (timer.canAddPreset()) {
+    <button type="button" class="preset-card preset-add ion-activatable" (click)="createPreset()">
       <span class="preset-name-row">
-        <span class="preset-key">{{ preset.key }}</span>{{ preset.name }}
+        <ion-icon name="add" aria-hidden="true"></ion-icon>
+        Nuevo preset
       </span>
-      <span class="preset-spec">{{ preset.spec }}</span>
+      <span class="preset-spec">Tus propias duraciones</span>
       <ion-ripple-effect></ion-ripple-effect>
     </button>
   }

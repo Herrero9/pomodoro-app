@@ -152,25 +152,72 @@ export const SHORTCUTS: { key: string; label: string }[] = [
   { key: 'S', label: 'Saltar' },
   { key: 'R', label: 'Reiniciar' },
   { key: 'T', label: 'Tema' },
-  { key: '1–4', label: 'Preset' },
+  { key: '1–9', label: 'Preset' },
 ];
 
-/** A selectable work/break duration pair. */
+/**
+ * A selectable work/break duration pair, as the grid and the keyboard
+ * shortcuts see it. `key` is the digit that applies it (empty once the list
+ * outgrows the digits), and `id` is set only on the user's own presets -- it is
+ * what `deletePreset` addresses and what tells the grid to offer a delete.
+ */
 export interface Preset {
   key: string;
   name: string;
   workMinutes: number;
   breakMinutes: number;
   spec: string;
+  /** Present only on user-created presets. */
+  id?: string;
 }
 
-/** Work/break duration pairs offered as one-tap presets (keys 1-4). */
-export const PRESETS: Preset[] = [
+/** A preset the user created, as it is persisted. The rest of `Preset` is derived. */
+export interface CustomPreset {
+  id: string;
+  name: string;
+  workMinutes: number;
+  breakMinutes: number;
+}
+
+/** Work/break duration pairs shipped with the app. They always hold keys 1-4. */
+export const BUILT_IN_PRESETS: Preset[] = [
   { key: '1', name: 'Clásico', workMinutes: 25, breakMinutes: 5, spec: '25 / 5' },
   { key: '2', name: 'Trabajo profundo', workMinutes: 50, breakMinutes: 10, spec: '50 / 10' },
   { key: '3', name: 'Ráfagas cortas', workMinutes: 15, breakMinutes: 5, spec: '15 / 5' },
   { key: '4', name: 'Bloque de estudio', workMinutes: 45, breakMinutes: 15, spec: '45 / 15' },
 ];
+
+/**
+ * How many presets the user may add. The grid is a two-column block inside a
+ * card in both layouts, so a list that grows without a bound would push the
+ * controls off the panel; five extra rows is already more than the digits can
+ * address.
+ */
+export const MAX_CUSTOM_PRESETS = 8;
+
+/** The "25 / 5" line under a preset's name. */
+export function presetSpec(workMinutes: number, breakMinutes: number): string {
+  return `${workMinutes} / ${breakMinutes}`;
+}
+
+/**
+ * The user's presets as the grid consumes them, numbered on from the built-ins.
+ * Only the first nine of the combined list get a digit: there is no key 10, and
+ * a shortcut legend that lied would be worse than no shortcut.
+ */
+export function toPresets(custom: CustomPreset[]): Preset[] {
+  return custom.map((preset, index) => {
+    const position = BUILT_IN_PRESETS.length + index + 1;
+    return {
+      key: position <= 9 ? String(position) : '',
+      name: preset.name,
+      workMinutes: preset.workMinutes,
+      breakMinutes: preset.breakMinutes,
+      spec: presetSpec(preset.workMinutes, preset.breakMinutes),
+      id: preset.id,
+    };
+  });
+}
 
 /** One suggestion shown while a break is running. */
 export interface RestIdea {

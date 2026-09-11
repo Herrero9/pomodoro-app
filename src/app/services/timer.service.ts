@@ -3,20 +3,26 @@ import { Subscription, interval } from 'rxjs';
 import { StorageService } from './storage.service';
 import { AlertService } from './alert.service';
 import {
+  BUILT_IN_PRESETS,
   CompletedPeriod,
+  CustomPreset,
   DEFAULT_SETTINGS,
   HISTORY_LIMIT,
+  MAX_CUSTOM_PRESETS,
   PomodoroPhase,
   PomodoroSettings,
   PHASE_LABELS,
   Preset,
   formatFocusDuration,
   headlineFor,
+  presetSpec,
+  toPresets,
 } from '../models/pomodoro.model';
 
 const SETTINGS_KEY = 'pomodoro_settings';
 const HISTORY_KEY = 'pomodoro_history';
 const STATE_KEY = 'pomodoro_state';
+const PRESETS_KEY = 'pomodoro_presets';
 const TICK_MS = 1000;
 
 /**
@@ -69,6 +75,21 @@ export class TimerService implements OnDestroy {
 
   /** What the user says they are working on. Filed with every completed work period. */
   readonly task = signal<string>('');
+
+  /** Presets the user created, in the order they were added. */
+  readonly customPresets = signal<CustomPreset[]>([]);
+
+  /**
+   * Every preset the grid and the keyboard shortcuts offer: the shipped ones
+   * first, holding their digits, then the user's own numbered on from there.
+   */
+  readonly presets = computed<Preset[]>(() => [
+    ...BUILT_IN_PRESETS,
+    ...toPresets(this.customPresets()),
+  ]);
+
+  /** Whether the user may still add a preset, or has hit `MAX_CUSTOM_PRESETS`. */
+  readonly canAddPreset = computed(() => this.customPresets().length < MAX_CUSTOM_PRESETS);
 
   /**
    * Focus seconds banked by work phases the session has already left behind.
@@ -246,6 +267,36 @@ export class TimerService implements OnDestroy {
     });
   }
 
+  /**
+   * Adds one of the user's own presets. The durations are clamped the same way
+   * the settings form clamps its fields, so a preset can never hold a value the
+   * timer would refuse. Returns the stored preset, or `null` when the list is
+   * already full.
+   */
+  async addPreset(draft: { name: string; workMinutes: number; breakMinutes: number }): Promise<CustomPreset | null> {
+    if (!this.canAddPreset()) {
+      return null;
+    }
+    const workMinutes = toPositiveInt(draft.workMinutes);
+    const breakMinutes = toPositiveInt(draft.breakMinutes);
+    const preset: CustomPreset = {
+      id: `preset-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+      // An unnamed preset is still useful; the durations name it well enough.
+      name: draft.name.trim() || presetSpec(workMinutes, breakMinutes),
+      workMinutes,
+      breakMinutes,
+    };
+    this.customPresets.update((presets) => [...presets, preset]);
+    await this.storage.set(PRESETS_KEY, this.customPresets());
+    return preset;
+  }
+
+  /** Removes one of the user's presets. The ones after it move up a digit. */
+  async deletePreset(id: string): Promise<void> {
+    this.customPresets.update((presets) => presets.filter((preset) => preset.id !== id));
+    await this.storage.set(PRESETS_KEY, this.customPresets());
+  }
+
   /** Sets the label filed with completed work periods. */
   async setTask(task: string): Promise<void> {
     this.task.set(task);
@@ -286,10 +337,11 @@ export class TimerService implements OnDestroy {
   }
 
   private async restore(): Promise<void> {
-    const [settings, history, state] = await Promise.all([
+    const [settings, history, state, presets] = await Promise.all([
       this.storage.get<PomodoroSettings>(SETTINGS_KEY),
       this.storage.get<CompletedPeriod[]>(HISTORY_KEY),
       this.storage.get<PersistedState>(STATE_KEY),
+      this.storage.get<CustomPreset[]>(PRESETS_KEY),
     ]);
     // Spread over the defaults so settings saved by an older version of the app
     // still get any field added since.
@@ -297,6 +349,9 @@ export class TimerService implements OnDestroy {
     this.settings.set(resolved);
     if (history) {
       this.completedPeriods.set(history);
+    }
+    if (presets) {
+      this.customPresets.set(presets.slice(0, MAX_CUSTOM_PRESETS));
     }
 
     if (!state) {
@@ -489,6 +544,11 @@ export class TimerService implements OnDestroy {
     };
     return this.storage.set(STATE_KEY, state);
   }
+}
+
+/** Clamps a typed duration to a whole number of minutes, at least one. */
+function toPositiveInt(value: number): number {
+  return Math.max(1, Math.round(value || 1));
 }
 
 /** Whether a completed period falls on the current calendar day. */
