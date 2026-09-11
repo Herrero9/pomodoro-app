@@ -1,11 +1,11 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TimerService } from '../../../services/timer.service';
 import { DEFAULT_SOUND_VIDEO_ID, extractYouTubeId } from '../../../models/pomodoro.model';
 
 /**
- * The background-sound video. Shared rather than owned by the desktop sidebar,
- * because the compact layout needs exactly the same thing.
+ * The background-sound video, shown in the desktop sidebar only. It grows to
+ * whatever height that flex column gives it.
  */
 @Component({
   selector: 'app-sound-player',
@@ -14,13 +14,6 @@ import { DEFAULT_SOUND_VIDEO_ID, extractYouTubeId } from '../../../models/pomodo
   standalone: false,
 })
 export class SoundPlayerComponent {
-  /**
-   * `fill` grows to whatever height the container gives it (the desktop
-   * sidebar, which is a flex column); `fixed` keeps a 16:9 box, for the
-   * compact layout where the surrounding card has no height to hand out.
-   */
-  readonly variant = input<'fill' | 'fixed'>('fill');
-
   private readonly timer = inject(TimerService);
   private readonly sanitizer = inject(DomSanitizer);
 

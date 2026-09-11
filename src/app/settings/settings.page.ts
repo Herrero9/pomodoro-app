@@ -3,7 +3,12 @@ import { Router } from '@angular/router';
 import { TimerService } from '../services/timer.service';
 import { ThemeService } from '../services/theme.service';
 import { AlertService } from '../services/alert.service';
-import { DEFAULT_SETTINGS, extractYouTubeId, PomodoroSettings } from '../models/pomodoro.model';
+import {
+  AMBIENT_SOUNDS,
+  DEFAULT_SETTINGS,
+  extractYouTubeId,
+  PomodoroSettings,
+} from '../models/pomodoro.model';
 
 /**
  * Settings form. It edits a local copy of the settings and only commits it on
@@ -24,6 +29,9 @@ export class SettingsPage implements OnInit {
    * would look like a bug.
    */
   readonly notificationsBlocked = signal(false);
+
+  /** Listed for their credits. */
+  readonly ambientSounds = AMBIENT_SOUNDS;
 
   readonly theme = inject(ThemeService);
   private readonly timer = inject(TimerService);

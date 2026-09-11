@@ -4,15 +4,31 @@
     <ion-label>{{ timer.isRunning() ? 'En marcha' : 'En pausa' }}</ion-label>
   </ion-chip>
 
-  <ion-card class="side-card side-sound">
+  <!-- Only the YouTube player needs the leftover height; the ambient tiles
+       would just float in it, so the card stops growing for them. -->
+  <ion-card class="side-card side-sound" [class.side-sound-fill]="ambient.source() === 'youtube'">
     <ion-card-header>
-      <div class="side-block-head">
-        <ion-card-title>Sonido de fondo</ion-card-title>
-        <ion-note color="primary" class="eyebrow">YouTube</ion-note>
-      </div>
+      <ion-card-title>Sonido de fondo</ion-card-title>
+      <ion-segment
+        class="sound-source"
+        aria-label="Fuente del sonido de fondo"
+        [value]="ambient.source()"
+        (ionChange)="ambient.setSource($any($event).detail.value)"
+      >
+        <ion-segment-button value="youtube">
+          <ion-label>YouTube</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="ambient">
+          <ion-label>Ambiente</ion-label>
+        </ion-segment-button>
+      </ion-segment>
     </ion-card-header>
     <ion-card-content class="sound-content">
-      <app-sound-player></app-sound-player>
+      @if (ambient.source() === 'youtube') {
+        <app-sound-player></app-sound-player>
+      } @else {
+        <app-ambient-player></app-ambient-player>
+      }
     </ion-card-content>
   </ion-card>
 

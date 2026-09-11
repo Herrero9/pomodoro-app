@@ -25,9 +25,8 @@
   </ion-card-content>
 </ion-card>
 
-<!-- Presets and the background sound used to be desktop-only, which left the
-     phone without the two things it needs most: a one-tap duration change and
-     the audio. -->
+<!-- The presets used to be desktop-only, which left the phone without a
+     one-tap duration change. -->
 <ion-card>
   <ion-card-header>
     <ion-card-title>Presets</ion-card-title>
@@ -37,14 +36,14 @@
   </ion-card-content>
 </ion-card>
 
+<!-- Ambient loops only: the YouTube embed stops as soon as a phone locks or
+     the app goes to the background, which is exactly when a background sound
+     is wanted. -->
 <ion-card>
   <ion-card-header>
-    <div class="compact-block-head">
-      <ion-card-title>Sonido de fondo</ion-card-title>
-      <ion-note color="primary" class="eyebrow">YouTube</ion-note>
-    </div>
+    <ion-card-title>Sonido ambiente</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <app-sound-player variant="fixed"></app-sound-player>
+    <app-ambient-player></app-ambient-player>
   </ion-card-content>
 </ion-card>

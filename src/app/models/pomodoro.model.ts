@@ -20,6 +20,8 @@ export interface PomodoroSettings {
   alertSound: boolean;
   /** Raise a system notification when a phase ends. */
   alertNotification: boolean;
+  /** Keep the ambient sound playing while the clock is paused or stopped. */
+  ambientAlwaysOn: boolean;
 }
 
 /** A work or break period the user actually ran to completion. */
@@ -43,7 +45,82 @@ export const DEFAULT_SETTINGS: PomodoroSettings = {
   autoStartWork: true,
   alertSound: true,
   alertNotification: false,
+  ambientAlwaysOn: false,
 };
+
+export type AmbientSoundId = 'rain' | 'cafe' | 'forest' | 'waves' | 'brown';
+
+/**
+ * Which background sound the desktop sidebar offers. The compact layout has no
+ * choice to make: the YouTube embed stops as soon as a phone locks, so it only
+ * ever gets the ambient loops.
+ */
+export type SoundSource = 'youtube' | 'ambient';
+
+/** One of the looping ambient sounds shipped in `assets/sounds`. */
+export interface AmbientSound {
+  id: AmbientSoundId;
+  name: string;
+  /** Ionicons name. */
+  icon: string;
+  /** Relative to the base href, so it resolves under the GitHub Pages path too. */
+  file: string;
+  /** Where the recording comes from. CC BY ones must stay credited. */
+  credit: { author: string; url: string; license: string };
+}
+
+export const AMBIENT_SOUNDS: AmbientSound[] = [
+  {
+    id: 'rain',
+    name: 'Lluvia',
+    icon: 'rainy-outline',
+    file: 'assets/sounds/rain.m4a',
+    credit: { author: 'alex36917', url: 'https://freesound.org/s/524605/', license: 'CC BY 4.0' },
+  },
+  {
+    id: 'cafe',
+    name: 'Cafetería',
+    icon: 'cafe-outline',
+    file: 'assets/sounds/cafe.m4a',
+    credit: {
+      author: 'stephan',
+      url: 'https://soundbible.com/1664-Restaurant-Ambiance.html',
+      license: 'Dominio público',
+    },
+  },
+  {
+    id: 'forest',
+    name: 'Bosque',
+    icon: 'leaf-outline',
+    file: 'assets/sounds/forest.m4a',
+    credit: { author: 'kvgarlic', url: 'https://freesound.org/s/156826/', license: 'CC0' },
+  },
+  {
+    id: 'waves',
+    name: 'Olas',
+    icon: 'water-outline',
+    file: 'assets/sounds/waves.m4a',
+    credit: { author: 'Luftrum', url: 'https://freesound.org/s/48412/', license: 'CC BY 4.0' },
+  },
+  {
+    id: 'brown',
+    name: 'Ruido marrón',
+    icon: 'pulse-outline',
+    file: 'assets/sounds/brown.m4a',
+    credit: { author: 'Generado para esta app', url: '', license: 'CC0' },
+  },
+];
+
+/** The line under the ambient tiles: when the picked sound is heard. */
+export function ambientStatusFor(picked: boolean, alwaysOn: boolean, running: boolean): string {
+  if (!picked) {
+    return 'Elige un sonido';
+  }
+  if (alwaysOn) {
+    return 'Siempre activo';
+  }
+  return running ? 'Suena mientras corre el temporizador' : 'Sonará al iniciar el temporizador';
+}
 
 /**
  * How many completed periods are kept. The history is written to device

@@ -8,6 +8,7 @@ import { ProgressDotsComponent } from './components/progress-dots/progress-dots.
 import { TimerControlsComponent } from './components/timer-controls/timer-controls.component';
 import { PresetGridComponent } from './components/preset-grid/preset-grid.component';
 import { SoundPlayerComponent } from './components/sound-player/sound-player.component';
+import { AmbientPlayerComponent } from './components/ambient-player/ambient-player.component';
 import { TaskInputComponent } from './components/task-input/task-input.component';
 
 /**
@@ -21,6 +22,7 @@ const EXPORTED = [
   TimerControlsComponent,
   PresetGridComponent,
   SoundPlayerComponent,
+  AmbientPlayerComponent,
   TaskInputComponent,
 ];
 

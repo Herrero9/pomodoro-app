@@ -136,9 +136,22 @@
         <ion-label class="eyebrow">Sonido de fondo</ion-label>
       </ion-list-header>
 
+      <ion-item>
+        <ion-label class="ion-text-wrap toggle-copy">
+          <h3>Sonido ambiente siempre activo</h3>
+          <p>Sigue sonando con el temporizador en pausa o parado, no solo mientras corre</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          aria-label="Sonido ambiente siempre activo"
+          [(ngModel)]="form.ambientAlwaysOn"
+          name="ambientAlwaysOn"
+        ></ion-toggle>
+      </ion-item>
+
       <ion-item lines="none">
         <ion-input
-          label="Vídeo de YouTube"
+          label="Vídeo de YouTube (escritorio)"
           labelPlacement="stacked"
           placeholder="Pega la URL o el ID del vídeo"
           [(ngModel)]="form.soundVideoId"
@@ -178,5 +191,28 @@
         (ionChange)="toggleDark()"
       ></ion-toggle>
     </ion-item>
+  </ion-list>
+
+  <!-- Required by the CC BY recordings, and fair to the rest. -->
+  <ion-list [inset]="true" class="credits">
+    <ion-list-header>
+      <ion-label class="eyebrow">Créditos de los sonidos</ion-label>
+    </ion-list-header>
+
+    @for (sound of ambientSounds; track sound.id; let last = $last) {
+      <ion-item [lines]="last ? 'none' : 'inset'">
+        <ion-label class="ion-text-wrap toggle-copy">
+          <h3>{{ sound.name }}</h3>
+          <p>
+            @if (sound.credit.url) {
+              <a [href]="sound.credit.url" target="_blank" rel="noopener">{{ sound.credit.author }}</a>
+            } @else {
+              {{ sound.credit.author }}
+            }
+            · {{ sound.credit.license }}
+          </p>
+        </ion-label>
+      </ion-item>
+    }
   </ion-list>
 </ion-content>

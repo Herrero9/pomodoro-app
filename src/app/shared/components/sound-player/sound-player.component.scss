@@ -12,11 +12,6 @@
   border-radius: var(--radius-sm);
   background: var(--color-neutral-300);
 
-  &--fixed {
-    flex: none;
-    aspect-ratio: 16 / 9;
-  }
-
   iframe {
     position: absolute;
     inset: 0;

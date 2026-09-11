@@ -1,0 +1,35 @@
+<div class="ambient-grid" role="group" aria-label="Sonido ambiente">
+  @for (sound of sounds; track sound.id) {
+    <button
+      type="button"
+      class="ambient-tile ion-activatable"
+      [class.active]="ambient.sound() === sound.id"
+      [attr.aria-pressed]="ambient.sound() === sound.id"
+      (click)="ambient.select(sound.id)"
+    >
+      <ion-icon [name]="sound.icon" aria-hidden="true"></ion-icon>
+      <span class="ambient-name">{{ sound.name }}</span>
+      <ion-ripple-effect></ion-ripple-effect>
+    </button>
+  }
+</div>
+
+<!-- The volume follows the thumb live (ionInput) but is written to storage
+     only once it is let go (ionChange). -->
+@if (ambient.volumeAdjustable) {
+  <ion-range
+    class="ambient-volume"
+    aria-label="Volumen del sonido ambiente"
+    [min]="0"
+    [max]="1"
+    [step]="0.05"
+    [value]="ambient.volume()"
+    (ionInput)="ambient.volume.set($any($event).detail.value)"
+    (ionChange)="ambient.setVolume($any($event).detail.value)"
+  >
+    <ion-icon slot="start" name="volume-low-outline" aria-hidden="true"></ion-icon>
+    <ion-icon slot="end" name="volume-high-outline" aria-hidden="true"></ion-icon>
+  </ion-range>
+}
+
+<p class="eyebrow ambient-status">{{ ambient.statusLabel() }}</p>
